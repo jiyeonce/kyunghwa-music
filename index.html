@@ -374,9 +374,12 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
     <a id="video-dl-btn" download style="background:rgba(255,255,255,.18);color:#fff;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-family:'Noto Sans KR',sans-serif;text-decoration:none;min-height:36px;display:flex;align-items:center;gap:6px">💾 다운로드</a>
   </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script
 <script>
-const TRACKS = [
+const SUPABASE_URL = 'https://aopuodrdxrulobwpfzfk.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_svZ43WIsSzEnmvTpir8SGg_9qRvD6Zd';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const TRACKS = [
   { emoji:'🐚', name:'나는 소라게', desc:'', type:'video', file:'videos/soragae-video.mp4', cover:'' },
   { emoji:'🎵', name:'나는 어쩌라고', desc:'', type:'audio', file:'audio/whatever.mp3', cover:'' },
 ];
@@ -430,7 +433,7 @@ function goHub(){
 
 /* ══ 노래 작업실 초기화 ══ */
 function initSong(){
-  renderGallery();renderTracks();renderReactions();
+  renderGallery();renderTracks();renderReactions();loadComments();
 }
 
 /* ══ 치료 자원 초기화 ══ */
@@ -580,12 +583,20 @@ function addHeart(){
 const comments=[];
 const AVATARS=['🌷','🌸','🌹','🌺','🌻','🌼','💐'];
 const AVCOLORS=['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE8D4'];
-function addComment(){
+async function addComment(){
   const t=document.getElementById('comment-text');
   const n=document.getElementById('comment-name');
   const text=t.value.trim();if(!text){t.focus();return;}
-  comments.unshift({avatar:AVATARS[Math.floor(Math.random()*AVATARS.length)],avcolor:AVCOLORS[comments.length%AVCOLORS.length],name:n.value.trim()||'익명의 방문자',text,time:'방금 전'});
-  t.value='';n.value='';renderComments();
+  const avatar=AVATARS[Math.floor(Math.random()*AVATARS.length)];
+  const avcolor=AVCOLORS[comments.length%AVCOLORS.length];
+  const name=n.value.trim()||'익명의 방문자';
+  await sb.from('comments').insert([{name,text,avatar,avcolor}]);
+  t.value='';n.value='';
+async function loadComments(){
+  const {data}=await sb.from('comments').select('*').order('created_at',{ascending:false});
+  comments.length=0;
+  if(data)data.forEach(c=>comments.push(c));
+  renderComments();
 }
 function renderComments(){
   const el=document.getElementById('comment-list');
