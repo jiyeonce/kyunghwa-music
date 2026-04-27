@@ -598,7 +598,6 @@ async function addComment(){
   const avatar=AVATARS[Math.floor(Math.random()*AVATARS.length)];
   const avcolor=AVCOLORS[comments.length%AVCOLORS.length];
   const name=n.value.trim()||'익명의 방문자';
-  const pw = document.getElementById('comment-password').value;
 
   const { error } = await sb.from('comments').insert([
     { name, text, avatar, avcolor, password: pw }
