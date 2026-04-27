@@ -797,21 +797,7 @@ function playSavedRecording(url){
   }
 
   loadTodayRecords();
-    async function deleteTodayRecord(id){
-  const ok = confirm('이 기록을 삭제할까요?');
-  if(!ok) return;
-
-  const { error } = await sb
-    .from('today_records')
-    .delete()
-    .eq('id', id);
-
-  if(error){
-    alert('삭제 실패: ' + error.message);
-    return;
-  }
-
-  loadTodayRecords();
+    
 }
 }
 </script>
