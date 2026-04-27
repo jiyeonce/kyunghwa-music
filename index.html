@@ -406,17 +406,6 @@ async function deleteRecordingReal(fileUrl){
 
   loadRecordings();
 }
-    .from('recordings')
-    .delete()
-    .eq('file_url', fileUrl);
-
-  if(dbError){
-    alert('목록 삭제 실패: ' + dbError.message);
-    return;
-  }
-
-  loadRecordings();
-}
 let lbIdx=0;
 function renderGallery(){
   const el=document.getElementById('gallery');
@@ -778,7 +767,10 @@ function playSavedRecording(url){
   const audio=new Audio(url);
   audio.play();
 }
-  function deleteTodayRecord(id){
+  let deleteTarget=null;
+let deleteType=null;
+
+function deleteTodayRecord(id){
   openDeleteModal('today', id);
 }
 
@@ -786,9 +778,6 @@ async function deleteTodayRecordReal(id){
   await sb.from('today_records').delete().eq('id', id);
   loadTodayRecords();
 }
-  let deleteTarget=null;
-let deleteType=null;
-
 function openDeleteModal(type,target){
   deleteType=type;
   deleteTarget=target;
@@ -799,7 +788,8 @@ function closeDeleteModal(){
   document.getElementById('delete-modal').style.display='none';
 }
 
-window.addEventListener('DOMContentLoaded',()=>{
+
+  window.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('confirm-delete-btn').onclick=async function(){
     if(deleteType==='recording'){
       await deleteRecordingReal(deleteTarget);
