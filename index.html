@@ -586,12 +586,25 @@ const AVCOLORS=['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE8D4'];
 async function addComment(){
   const t=document.getElementById('comment-text');
   const n=document.getElementById('comment-name');
-  const text=t.value.trim();if(!text){t.focus();return;}
+  const text=t.value.trim();
+  if(!text){t.focus();return;}
+
   const avatar=AVATARS[Math.floor(Math.random()*AVATARS.length)];
   const avcolor=AVCOLORS[comments.length%AVCOLORS.length];
   const name=n.value.trim()||'익명의 방문자';
-  await sb.from('comments').insert([{name,text,avatar,avcolor}]);
-  t.value='';n.value='';
+
+  const { error } = await sb.from('comments').insert([
+    { name, text, avatar, avcolor }
+  ]);
+
+  if(error){
+    console.log(error);
+    alert('댓글 저장 실패: ' + error.message);
+    return;
+  }
+
+  t.value='';
+  n.value='';
   loadComments();
 }
 async function loadComments(){
@@ -606,7 +619,7 @@ function renderComments(){
   el.innerHTML=comments.map(c=>`
     <div class="comment-item">
       <div class="c-avatar" style="background:${c.avcolor}">${c.avatar}</div>
-      <div><div class="c-name">${c.name}</div><div class="c-text">${c.text}</div><div class="c-time">${c.time}</div></div>
+      <div><div class="c-name">${c.name}</div><div class="c-text">${c.text}</div><div class="c-time">${new Date(c.created_at).toLocaleString()}</div></div>
     </div>`).join('');
 }
 
