@@ -394,20 +394,9 @@ function initTherapy(){
   loadTodayRecords();
   loadRecordings();
 }
-async function deleteRecording(fileUrl){
-  const ok = confirm('이 녹음을 삭제할까요?');
-  if(!ok) return;
-
-  const fileName = fileUrl.split('/recordings/').pop();
-
-  const { error: storageError } = await sb.storage
-    .from('recordings')
-    .remove([fileName]);
-
-  if(storageError){
-    alert('파일 삭제 실패: ' + storageError.message);
-    return;
-  }
+function deleteRecording(fileUrl){
+  openDeleteModal('recording', fileUrl);
+}
 
   const { error: dbError } = await sb
     .from('recordings')
@@ -782,22 +771,41 @@ function playSavedRecording(url){
   const audio=new Audio(url);
   audio.play();
 }
-  async function deleteTodayRecord(id){
-  const ok = confirm('이 기록을 삭제할까요?');
-  if(!ok) return;
-
-  const { error } = await sb
-    .from('today_records')
-    .delete()
-    .eq('id', id);
-
-  if(error){
-    alert('삭제 실패: ' + error.message);
-    return;
-  }
-
+  function deleteTodayRecord(id){
+  openDeleteModal('today', id);
+}
   loadTodayRecords();
 }
+  let deleteTarget=null;
+let deleteType=null;
+
+function openDeleteModal(type,target){
+  deleteType=type;
+  deleteTarget=target;
+  document.getElementById('delete-modal').style.display='flex';
+}
+
+function closeDeleteModal(){
+  document.getElementById('delete-modal').style.display='none';
+}
+
+document.getElementById('confirm-delete-btn').onclick=async function(){
+  if(deleteType==='recording'){
+    await deleteRecordingReal(deleteTarget);
+  }
+  if(deleteType==='today'){
+    await deleteTodayRecordReal(deleteTarget);
+  }
+  closeDeleteModal();
+};
 </script>
+<div id="delete-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:20px;width:260px;text-align:center;">
+    <div>🗑 삭제할까요?</div>
+    <div style="font-size:12px;margin:10px 0;">되돌릴 수 없어요</div>
+    <button onclick="closeDeleteModal()">취소</button>
+    <button id="confirm-delete-btn">삭제</button>
+  </div>
+</div>
 </body>
 </html>
