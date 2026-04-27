@@ -387,7 +387,7 @@ function initSong(){
 }
 function initTherapy(){
   const d=new Date();
-  document.getElementById('today-date').textContent=...
+  document.getElementById('today-date').textContent=d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일';
   initCanvas();
   loadTodayRecords();
   loadRecordings();
