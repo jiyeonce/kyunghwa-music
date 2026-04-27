@@ -338,6 +338,8 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
       <div class="sub-label">단어로</div>
       <input class="word-input" id="word-input" placeholder="오늘을 한 단어로 표현하면..." maxlength="30" oninput="updateSummary()">
       <div class="today-summary" id="today-summary"></div>
+      <button onclick="saveTodayRecord()" style="width:100%;margin-top:12px;padding:12px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--pink),var(--pink-light));color:#fff;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:500;cursor:pointer;">오늘 기록 저장하기 🌸</button>
+<div id="today-records-list" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;"></div>
       <div class="sub-label">그림으로</div>
       <div class="canvas-wrap">
         <div class="canvas-tools">
@@ -453,6 +455,7 @@ function initTherapy(){
   const d=new Date();
   document.getElementById('today-date').textContent=d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일';
   initCanvas();
+  loadTodayRecords();
 }
 
 /* ══ 갤러리 ══ */
@@ -754,6 +757,28 @@ async function deleteComment(id){
   loadComments();
 }
 /* ══ 나는 오늘 ══ */
+  async function saveTodayRecord(){
+  const mood=selectedMood;
+  const word=document.getElementById('word-input').value.trim();
+  const canvas=document.getElementById('draw-canvas');
+  const drawing=canvas.toDataURL('image/png');
+  if(!mood&&!word){alert('기분이나 단어를 입력해줘요 🌸');return;}
+  await sb.from('today_records').insert([{mood,word,drawing}]);
+  alert('저장됐어요 🌸');
+  loadTodayRecords();
+}
+
+async function loadTodayRecords(){
+  const {data}=await sb.from('today_records').select('*').order('created_at',{ascending:false}).limit(10);
+  const el=document.getElementById('today-records-list');
+  if(!data||!data.length){el.innerHTML='';return;}
+  el.innerHTML=data.map(r=>`
+    <div style="background:linear-gradient(135deg,#FFF5F0,#FFF0F8);border-radius:12px;padding:10px 12px;border:1px solid rgba(200,160,140,.15)">
+      <div style="font-size:11px;color:var(--text-light);margin-bottom:6px">${new Date(r.created_at).toLocaleDateString('ko-KR')}</div>
+      <div style="font-size:18px;margin-bottom:4px">${r.mood||''} ${r.word?'「'+r.word+'」':''}</div>
+      ${r.drawing?`<img src="${r.drawing}" style="width:100%;border-radius:8px;margin-top:6px">`:''}
+    </div>`).join('');
+}
 let selectedMood='';
 function selectMood(btn,emoji){
   document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
