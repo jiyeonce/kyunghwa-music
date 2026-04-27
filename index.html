@@ -388,7 +388,9 @@ function initSong(){
 function initTherapy(){
   const d=new Date();
   document.getElementById('today-date').textContent=d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일';
-  initCanvas();loadTodayRecords();
+  initCanvas();
+  loadTodayRecords();
+  loadRecordings();
 }
 
 let lbIdx=0;
@@ -623,63 +625,86 @@ function setTool(t){tool=t;document.getElementById('pen-btn').classList.toggle('
 function clearCanvas(){const c=document.getElementById('draw-canvas');const ctx=c.getContext('2d');ctx.fillStyle='#FFFAF7';ctx.fillRect(0,0,c.width,c.height);}
 
 let mediaRec=null,recChunks=[],isRec=false,recCount=0;
+
 function toggleRec(){
   if(!isRec){
     navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
-      mediaRec=new MediaRecorder(stream);recChunks=[];
-      mediaRec.ondataavailable=e=>recChunks.push(e.data);
+      mediaRec=new MediaRecorder(stream);
+      recChunks=[];
+
+      mediaRec.ondataavailable=e=>{
+        recChunks.push(e.data);
+      };
+
       mediaRec.onstop=async ()=>{
-  const blob=new Blob(recChunks,{type:'audio/webm'});
-  recCount++;
+        const blob=new Blob(recChunks,{type:'audio/webm'});
+        recCount++;
 
-  const fileName='recording-'+Date.now()+'.webm';
+        const fileName='recording-'+Date.now()+'.webm';
 
-  const { error: uploadError } = await sb.storage
-    .from('recordings')
-    .upload(fileName, blob, {
-      contentType: 'audio/webm'
-    });
+        const { error: uploadError } = await sb.storage
+          .from('recordings')
+          .upload(fileName, blob, {
+            contentType:'audio/webm'
+          });
 
-  if(uploadError){
-    alert('녹음 업로드 실패: ' + uploadError.message);
-    stream.getTracks().forEach(t=>t.stop());
-    return;
-  }
+        if(uploadError){
+          alert('녹음 업로드 실패: ' + uploadError.message);
+          stream.getTracks().forEach(t=>t.stop());
+          resetRecButton();
+          return;
+        }
 
-  const { data: publicData } = sb.storage
-    .from('recordings')
-    .getPublicUrl(fileName);
+        const { data: publicData } = sb.storage
+          .from('recordings')
+          .getPublicUrl(fileName);
 
-  const fileUrl = publicData.publicUrl;
+        const fileUrl=publicData.publicUrl;
 
-  const { error: dbError } = await sb.from('recordings').insert([
-    { name:'소리 '+recCount, file_url:fileUrl }
-  ]);
+        const { error: dbError } = await sb.from('recordings').insert([
+          {
+            name:'소리 '+recCount,
+            file_url:fileUrl
+          }
+        ]);
 
-  if(dbError){
-    alert('녹음 저장 실패: ' + dbError.message);
-    return;
-  }
+        if(dbError){
+          alert('녹음 저장 실패: ' + dbError.message);
+          stream.getTracks().forEach(t=>t.stop());
+          resetRecButton();
+          return;
+        }
 
-  loadRecordings();
-  stream.getTracks().forEach(t=>t.stop());
-};
-      mediaRec.start();isRec=true;
+        stream.getTracks().forEach(t=>t.stop());
+        resetRecButton();
+        loadRecordings();
+      };
+
+      mediaRec.start();
+      isRec=true;
       document.getElementById('rec-btn').classList.add('recording');
       document.getElementById('rec-icon').textContent='⏹';
       document.getElementById('rec-text').textContent='녹음 중... (클릭하면 멈춰요)';
-    }).catch(()=>alert('마이크 권한이 필요해요!'));
+    }).catch(err=>{
+      console.log(err);
+      alert('마이크 권한이 필요해요!');
+      resetRecButton();
+    });
   }else{
-    mediaRec.stop();isRec=false;
-    document.getElementById('rec-btn').classList.remove('recording');
-    document.getElementById('rec-icon').textContent='⏺';
-    document.getElementById('rec-text').textContent='녹음 시작';
+    if(mediaRec && mediaRec.state !== 'inactive'){
+      mediaRec.stop();
+    }
   }
 }
 
-const recAudios={};
-function playRec(id){
-  async function loadRecordings(){
+function resetRecButton(){
+  isRec=false;
+  document.getElementById('rec-btn').classList.remove('recording');
+  document.getElementById('rec-icon').textContent='⏺';
+  document.getElementById('rec-text').textContent='녹음 시작';
+}
+
+async function loadRecordings(){
   const { data, error } = await sb
     .from('recordings')
     .select('*')
@@ -687,6 +712,7 @@ function playRec(id){
 
   if(error){
     console.log(error);
+    alert('녹음 목록 불러오기 실패: ' + error.message);
     return;
   }
 
@@ -700,43 +726,15 @@ function playRec(id){
   list.innerHTML=data.map((r,i)=>`
     <div class="rec-item">
       <span class="rec-item-name">🎤 ${r.name || '소리 '+(i+1)}</span>
-      <button class="rec-play" onclick="new Audio('${r.file_url}').play()">▶</button>
+      <button class="rec-play" onclick="playSavedRecording('${r.file_url}')">▶</button>
       <a href="${r.file_url}" download class="rec-dl">💾</a>
     </div>
   `).join('');
 }
-  if(recAudios[id]){recAudios[id].play();return;}
-  const item=document.querySelector(`[data-id="${id}"]`);
-  if(!item)return;
-  const a=new Audio(item.dataset.url);
-  recAudios[id]=a;
-  a.play();
-}
-  async function loadRecordings(){
-  const { data, error } = await sb
-    .from('recordings')
-    .select('*')
-    .order('created_at',{ascending:false});
 
-  if(error){
-    console.log(error);
-    return;
-  }
-
-  const list=document.getElementById('rec-list');
-
-  if(!data || !data.length){
-    list.innerHTML='';
-    return;
-  }
-
-  list.innerHTML=data.map((r,i)=>`
-    <div class="rec-item">
-      <span class="rec-item-name">🎤 ${r.name || '소리 '+(i+1)}</span>
-      <button class="rec-play" onclick="new Audio('${r.file_url}').play()">▶</button>
-      <a href="${r.file_url}" download class="rec-dl">💾</a>
-    </div>
-  `).join('');
+function playSavedRecording(url){
+  const audio=new Audio(url);
+  audio.play();
 }
 </script>
 </body>
