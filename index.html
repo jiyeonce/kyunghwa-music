@@ -442,7 +442,7 @@ function initSong(){
   renderReactions();
   loadComments();
   subscribeComments();
-
+  loadReactions();
   countVisit();
   loadVisitCount();  
 }
@@ -578,7 +578,38 @@ function renderReactions(){
       <span class="emo">${r.e}</span><span>${r.label}</span><span class="emoji-count">${r.count}</span>
     </button>`).join('');
 }
-function toggleReaction(i){
+  async function loadReactions(){
+  const { data, error } = await sb
+    .from('reactions')
+    .select('reaction_index');
+
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  REACTIONS.forEach(r => r.count = 0);
+
+  data.forEach(r => {
+    if(REACTIONS[r.reaction_index]){
+      REACTIONS[r.reaction_index].count++;
+    }
+  });
+
+  renderReactions();
+}
+async function toggleReaction(i){
+  const { error } = await sb
+    .from('reactions')
+    .insert([{ reaction_index: i }]);
+
+  if(error){
+    alert('반응 저장 실패: ' + error.message);
+    return;
+  }
+
+  loadReactions();
+}
   if(activeReactions.has(i)){activeReactions.delete(i);REACTIONS[i].count--;}
   else{activeReactions.add(i);REACTIONS[i].count++;}
   renderReactions();
