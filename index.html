@@ -761,9 +761,16 @@ async function deleteComment(id){
   const mood=selectedMood;
   const word=document.getElementById('word-input').value.trim();
   const canvas=document.getElementById('draw-canvas');
-  const drawing=canvas.toDataURL('image/jpeg', 0.3);
+  
+  // 작은 캔버스로 리사이즈
+  const small=document.createElement('canvas');
+  small.width=200;small.height=100;
+  small.getContext('2d').drawImage(canvas,0,0,200,100);
+  const drawing=small.toDataURL('image/jpeg',0.2);
+  
   if(!mood&&!word){alert('기분이나 단어를 입력해줘요 🌸');return;}
-  await sb.from('today_records').insert([{mood,word,drawing}]);
+  const {error}=await sb.from('today_records').insert([{mood,word,drawing}]);
+  if(error){alert('저장 실패: '+error.message);return;}
   alert('저장됐어요 🌸');
   loadTodayRecords();
 }
