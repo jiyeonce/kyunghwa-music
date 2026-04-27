@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>경화의 음악 공간</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;overflow-x:hidden;scroll-behavior:smooth}
+:root{
+  --cream:#FFF8F0;--peach:#FFE4CC;
+  --pink:#C97B7B;--pink-light:#E8A89A;--pink-pale:#FFD6E8;
+  --teal:#5B9B8E;
+  --text-dark:#3D2B1F;--text-mid:#6B4E3D;--text-light:#A08070;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh}
+
+/* ── 게이트 ── */
+#gate{position:fixed;inset:0;z-index:500;background:linear-gradient(160deg,#FFF8F0 0%,#FFE8D8 50%,#FFD6E8 100%);display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.gate-box{background:#fff;border-radius:24px;padding:2.2rem 2rem;border:1px solid rgba(200,160,140,.2);box-shadow:0 8px 40px rgba(201,123,123,.12);width:min(340px,90vw);text-align:center}
+.gate-emoji{font-size:40px;margin-bottom:1rem;display:block}
+.gate-title{font-family:'Noto Serif KR',serif;font-size:1.3rem;color:var(--text-dark);margin-bottom:.4rem}
+.gate-sub{font-size:12px;color:var(--text-light);margin-bottom:1.6rem;line-height:1.8}
+.gate-input{width:100%;border:1.5px solid rgba(200,160,140,.3);border-radius:12px;padding:12px 16px;font-family:'Noto Sans KR',sans-serif;font-size:16px;color:var(--text-dark);background:var(--cream);outline:none;text-align:center;letter-spacing:4px;margin-bottom:.8rem;-webkit-appearance:none}
+.gate-input:focus{border-color:rgba(201,123,123,.5)}
+.gate-btn{width:100%;background:linear-gradient(135deg,var(--pink),var(--pink-light));color:#fff;border:none;border-radius:12px;padding:13px;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:500;cursor:pointer;min-height:48px}
+.gate-btn:active{transform:scale(.98)}
+.gate-error{font-size:12px;color:var(--pink);margin-top:.5rem;display:none}
+.gate-error.show{display:block}
+
+/* ── 랜딩 ── */
+#landing{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 1rem 2rem;text-align:center;background:linear-gradient(160deg,#FFF8F0 0%,#FFE8D8 50%,#FFD6E8 100%);position:relative;overflow:hidden}
+#landing::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle at 20% 20%,rgba(255,200,180,.3) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(180,220,210,.3) 0%,transparent 50%)}
+.note-float{position:absolute;font-size:16px;opacity:0;animation:floatNote 4s ease-in-out infinite;pointer-events:none}
+@keyframes floatNote{0%{opacity:0;transform:translateY(0) rotate(-10deg)}20%{opacity:.7}80%{opacity:.4}100%{opacity:0;transform:translateY(-55px) rotate(10deg)}}
+.landing-icon{font-size:56px;margin-bottom:1.2rem;animation:fadeUp .9s ease both;display:block}
+.subtitle-tag{display:inline-block;background:rgba(91,155,142,.15);color:var(--teal);font-size:10px;letter-spacing:2px;padding:4px 12px;border-radius:20px;margin-bottom:.75rem;border:1px solid rgba(91,155,142,.3)}
+h1{font-family:'Noto Serif KR',serif;font-size:clamp(1.7rem,7vw,2.8rem);font-weight:600;color:var(--text-dark);line-height:1.3;margin-bottom:.5rem;animation:fadeUp .9s .1s ease both;opacity:0}
+h1 span{color:var(--pink)}
+.tagline{font-size:13px;color:var(--text-light);margin-bottom:2rem;line-height:1.9;animation:fadeUp .9s .2s ease both;opacity:0}
+.enter-btn{background:linear-gradient(135deg,var(--pink),var(--pink-light));color:#fff;border:none;padding:.9rem 2.4rem;border-radius:50px;font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 4px 18px rgba(201,123,123,.35);min-height:48px;animation:fadeUp .9s .3s ease both;opacity:0}
+.enter-btn:active{transform:scale(.97)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── 허브 ── */
+#hub{display:none;min-height:100vh;min-height:100dvh;background:linear-gradient(160deg,#FFF8F0 0%,#FFE8D8 60%,#FFD6E8 100%);padding:2.5rem 1rem 3rem}
+.hub-header{text-align:center;margin-bottom:2rem}
+.hub-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.3rem,5vw,1.8rem);color:var(--text-dark);margin-bottom:.4rem}
+.hub-sub{font-size:12px;color:var(--text-light);letter-spacing:.5px}
+.hub-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:480px;margin:0 auto}
+.hub-card{background:#fff;border-radius:22px;padding:1.8rem 1rem;text-align:center;border:1.5px solid rgba(200,160,140,.15);cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.hub-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .25s;background:linear-gradient(135deg,rgba(255,228,204,.5),rgba(255,214,232,.5))}
+.hub-card:hover::before{opacity:1}
+.hub-card:hover{border-color:rgba(201,123,123,.3);box-shadow:0 4px 20px rgba(201,123,123,.12)}
+.hub-card:active{transform:scale(.97)}
+.hub-emoji{font-size:44px;margin-bottom:.9rem;display:block}
+.hub-name{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:600;color:var(--text-dark);line-height:1.5;margin-bottom:.4rem}
+.hub-desc{font-size:11px;color:var(--text-light);line-height:1.7}
+
+/* ── 공통 페이지 ── */
+.page{display:none;min-height:100vh;background:var(--cream);padding-bottom:120px}
+.page-header{background:linear-gradient(135deg,var(--peach) 0%,var(--pink-pale) 100%);padding:3rem 1.2rem 1.2rem;text-align:center;border-bottom:1px solid rgba(200,160,140,.2);position:relative}
+.back-btn{position:absolute;left:.9rem;top:.9rem;background:rgba(255,255,255,.65);border:1px solid rgba(200,160,140,.3);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--text-mid);cursor:pointer;font-family:'Noto Sans KR',sans-serif;min-height:36px}
+.page-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.1rem,4vw,1.5rem);color:var(--text-dark);margin-bottom:.2rem}
+.page-sub{font-size:11px;color:var(--text-light)}
+.section{padding:1rem 1rem .6rem}
+.section-label{font-size:10px;letter-spacing:2px;color:var(--text-light);margin-bottom:.8rem;text-transform:uppercase}
+.card{background:#fff;border-radius:18px;padding:1.1rem 1rem;border:1.5px solid rgba(200,160,140,.15);margin-bottom:.75rem}
+.card-title{font-size:11px;color:var(--text-light);letter-spacing:1px;margin-bottom:.9rem}
+
+/* ── 트랙 ── */
+.track-item{display:flex;align-items:center;gap:10px;padding:11px 10px;background:#fff;border-radius:14px;margin-bottom:8px;border:1px solid rgba(200,160,140,.15);cursor:pointer;position:relative;overflow:hidden;min-height:60px}
+.track-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--pink),var(--pink-light));border-radius:3px 0 0 3px;opacity:0;transition:opacity .2s}
+.track-item.playing{background:linear-gradient(135deg,#FFF5F0,#FFF8FC)}
+.track-item.playing::before{opacity:1}
+.track-item:active{background:#FFF5F0}
+.track-num{width:20px;text-align:center;font-size:11px;color:var(--text-light);flex-shrink:0}
+.track-thumb{width:44px;height:44px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;position:relative}
+.track-thumb img{width:100%;height:100%;object-fit:cover}
+.track-type-badge{position:absolute;bottom:2px;right:2px;background:rgba(0,0,0,.45);border-radius:4px;font-size:8px;color:#fff;padding:1px 4px;line-height:1.4}
+.track-info{flex:1;min-width:0}
+.track-name{font-size:13px;font-weight:500;color:var(--text-dark);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track-desc{font-size:11px;color:var(--text-light)}
+.play-icon{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--pink-light));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.play-icon svg{width:11px;height:11px;fill:#fff;margin-left:2px}
+.play-icon.pause svg{margin-left:0}
+
+/* ── 앨범커버 플레이어 ── */
+.album-player{background:linear-gradient(135deg,#FFF5F0,#FFF0F8);border-radius:18px;padding:1.2rem;margin-bottom:8px;display:none}
+.album-player.visible{display:block}
+.album-cover-area{width:100%;max-width:260px;margin:0 auto 1rem;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--peach);display:flex;align-items:center;justify-content:center;font-size:48px;position:relative}
+.album-cover-area img{width:100%;height:100%;object-fit:cover;display:none}
+.album-cover-area img.visible{display:block}
+.album-player-name{text-align:center;font-family:'Noto Serif KR',serif;font-size:16px;color:var(--text-dark);margin-bottom:4px}
+.album-player-sub{text-align:center;font-size:11px;color:var(--text-light);margin-bottom:12px}
+.album-progress{height:4px;background:rgba(200,160,140,.25);border-radius:2px;margin-bottom:8px;cursor:pointer}
+.album-progress-fill{height:100%;background:linear-gradient(90deg,var(--pink),var(--pink-light));border-radius:2px;width:0%;transition:width .1s}
+.album-time-row{display:flex;justify-content:space-between;font-size:10px;color:var(--text-light);margin-bottom:10px}
+.album-controls{display:flex;align-items:center;justify-content:center;gap:16px}
+.album-ctrl{width:36px;height:36px;border:none;background:none;cursor:pointer;font-size:18px;color:var(--text-mid);display:flex;align-items:center;justify-content:center}
+.album-ctrl.main{width:48px;height:48px;background:linear-gradient(135deg,var(--pink),var(--pink-light));border-radius:50%;color:#fff;font-size:20px;box-shadow:0 3px 12px rgba(201,123,123,.3)}
+.album-ctrl.main:active{transform:scale(.95)}
+
+/* ── 비디오 모달 ── */
+#video-modal{display:none;position:fixed;inset:0;z-index:400;background:rgba(20,10,5,.92);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:1rem;flex-direction:column;gap:12px}
+#video-modal.open{display:flex}
+#video-modal video{max-width:min(92vw,640px);max-height:75vh;border-radius:14px;background:#000;outline:none}
+.video-title{font-size:14px;font-weight:500;color:#fff;font-family:'Noto Serif KR',serif}
+.video-close{background:rgba(255,255,255,.18);border:none;color:#fff;font-size:14px;padding:8px 20px;border-radius:20px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;min-height:36px}
+.video-close:active{background:rgba(255,255,255,.3)}
+
+/* ── 갤러리 ── */
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.gallery-item{aspect-ratio:1;border-radius:12px;overflow:hidden;cursor:pointer;background:var(--peach)}
+.gallery-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+.gallery-item:active img{transform:scale(1.05)}
+#lightbox{display:none;position:fixed;inset:0;z-index:300;background:rgba(30,15,10,.88);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1rem}
+#lightbox.open{display:flex}
+#lightbox img{max-width:min(90vw,600px);max-height:85vh;border-radius:16px;object-fit:contain}
+.lb-close{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,.18);border:none;color:#fff;font-size:22px;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.18);border:none;color:#fff;font-size:20px;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lb-prev{left:1rem}.lb-next{right:1rem}
+
+/* ── 리액션 ── */
+.emoji-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:1rem}
+.emoji-btn{display:flex;align-items:center;gap:5px;background:var(--cream);border:1.5px solid rgba(200,160,140,.2);border-radius:20px;padding:7px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:12px;min-height:36px;transition:all .2s}
+.emoji-btn.active{background:#FFF0E8;border-color:var(--pink)}
+.emoji-btn:active{transform:scale(.95)}
+.emoji-btn .emo{font-size:15px}
+.emoji-count{font-size:11px;color:var(--text-mid);font-weight:500}
+.heart-area{display:flex;align-items:center;justify-content:center;gap:14px}
+.heart-btn{background:linear-gradient(135deg,#FFB8B8,#FFCCE0);border:none;border-radius:50px;padding:10px 24px;font-size:22px;cursor:pointer;box-shadow:0 2px 10px rgba(255,120,120,.22);min-height:48px}
+.heart-btn:active{transform:scale(.94)}
+.heart-btn.boom{animation:heartBoom .35s ease}
+@keyframes heartBoom{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
+.heart-count{font-size:15px;color:var(--pink);font-weight:500}
+
+/* ── 댓글 ── */
+.comment-input-wrap{display:flex;gap:8px;margin-bottom:1rem;align-items:flex-start}
+.comment-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#FFB8A0,#FFD6D6);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;margin-top:2px}
+.input-col{flex:1;display:flex;flex-direction:column;gap:6px}
+.name-input,.comment-textarea{width:100%;border:1.5px solid rgba(200,160,140,.25);border-radius:12px;padding:9px 12px;font-family:'Noto Sans KR',sans-serif;font-size:13px;color:var(--text-dark);background:var(--cream);outline:none;-webkit-appearance:none}
+.name-input{border-radius:10px}
+.name-input:focus,.comment-textarea:focus{border-color:rgba(201,123,123,.5)}
+.comment-textarea{resize:none}
+.name-input::placeholder,.comment-textarea::placeholder{color:var(--text-light)}
+.comment-submit{align-self:flex-end;background:linear-gradient(135deg,var(--pink),var(--pink-light));color:#fff;border:none;border-radius:10px;padding:8px 16px;font-size:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;min-height:36px}
+.comment-submit:active{transform:scale(.97)}
+.comment-item{display:flex;gap:9px;padding:10px 0;border-top:1px solid rgba(200,160,140,.1)}
+.c-avatar{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px}
+.c-name{font-size:11px;font-weight:500;color:var(--text-mid);margin-bottom:2px}
+.c-text{font-size:13px;color:var(--text-dark);line-height:1.65}
+.c-time{font-size:10px;color:var(--text-light);margin-top:3px}
+.list-empty{font-size:13px;color:var(--text-light);text-align:center;padding:1rem 0}
+
+/* ── 나는 오늘 ── */
+.today-title{font-family:'Noto Serif KR',serif;font-size:20px;color:var(--text-dark);margin-bottom:4px}
+.today-date{font-size:12px;color:var(--text-light);margin-bottom:1rem}
+.sub-label{font-size:11px;color:var(--text-light);letter-spacing:1px;margin-bottom:8px;margin-top:14px;text-transform:uppercase}
+.mood-row{display:flex;gap:6px;flex-wrap:wrap}
+.mood-btn{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+.mood-emoji{width:44px;height:44px;border-radius:12px;border:2px solid rgba(200,160,140,.2);background:var(--cream);font-size:22px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.mood-btn.selected .mood-emoji{border-color:var(--pink);background:#FFF0E8;transform:scale(1.1)}
+.mood-label{font-size:10px;color:var(--pink);font-weight:500}
+.word-input{width:100%;padding:11px 13px;border:1.5px solid rgba(200,160,140,.25);border-radius:12px;font-family:'Noto Sans KR',sans-serif;font-size:14px;color:var(--text-dark);outline:none;background:var(--cream);-webkit-appearance:none}
+.word-input:focus{border-color:rgba(201,123,123,.5)}
+.word-input::placeholder{color:rgba(160,128,112,.5)}
+.today-summary{margin-top:12px;padding:12px 14px;background:linear-gradient(135deg,#FFF5F0,#FFF0F8);border-radius:12px;font-size:15px;font-weight:500;color:var(--pink);display:none;font-family:'Noto Serif KR',serif}
+.canvas-wrap{border:1.5px solid rgba(200,160,140,.2);border-radius:14px;overflow:hidden}
+.canvas-tools{display:flex;gap:6px;padding:8px 10px;background:linear-gradient(135deg,#FFF5F0,#FFF8FC);border-bottom:1px solid rgba(200,160,140,.15);flex-wrap:wrap;align-items:center}
+.color-dot{width:24px;height:24px;border-radius:50%;border:2px solid transparent;cursor:pointer;flex-shrink:0;transition:transform .15s}
+.color-dot.active{border-color:var(--text-dark);transform:scale(1.2)}
+.tool-btn{padding:4px 10px;border-radius:8px;border:1.5px solid rgba(200,160,140,.2);background:#fff;font-size:11px;font-weight:500;cursor:pointer;color:var(--pink);font-family:'Noto Sans KR',sans-serif}
+.tool-btn.active{background:#FFF0E8;border-color:var(--pink)}
+canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto}
+
+/* ── 녹음 ── */
+.rec-hint{font-size:12px;color:var(--text-light);margin-bottom:10px;line-height:1.8}
+.rec-btn{width:100%;padding:13px;border-radius:14px;border:2px dashed rgba(200,160,140,.3);background:var(--cream);cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:500;color:var(--pink);display:flex;align-items:center;justify-content:center;gap:8px}
+.rec-btn:active{background:#FFF0E8}
+.rec-btn.recording{background:#FFF0E8;border-color:var(--pink);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.recordings-list{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.rec-item{background:linear-gradient(135deg,#FFF5F0,#FFF8FC);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:8px;border:1px solid rgba(200,160,140,.15)}
+.rec-item-name{flex:1;font-size:13px;font-weight:500;color:var(--text-dark)}
+.rec-play{width:30px;height:30px;background:linear-gradient(135deg,var(--pink),var(--pink-light));border-radius:50%;border:none;cursor:pointer;color:white;font-size:12px;display:flex;align-items:center;justify-content:center}
+.rec-dl{width:30px;height:30px;background:var(--cream);border-radius:50%;border:1.5px solid rgba(200,160,140,.3);display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:13px}
+</style>
+</head>
+<body>
+
+<!-- 게이트 -->
+<div id="gate">
+  <div class="gate-box">
+    <span class="gate-emoji">🎵</span>
+    <div class="gate-title">경화의 음악 공간</div>
+    <div class="gate-sub">경화만을 위한<br>소중한 공간이에요 🌸<br><br>입장 코드를 입력해주세요</div>
+    <input class="gate-input" id="gate-input" type="password" placeholder="· · · ·" maxlength="10" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="gate-btn" onclick="checkPw()">입장하기 →</button>
+    <div class="gate-error" id="gate-error">입장 코드가 맞지 않아요 🌸</div>
+  </div>
+</div>
+
+<!-- 랜딩 -->
+<div id="landing">
+  <span class="note-float" style="top:12%;left:6%;animation-delay:0s">♩</span>
+  <span class="note-float" style="top:22%;right:8%;animation-delay:1.2s">♪</span>
+  <span class="note-float" style="top:55%;left:4%;animation-delay:2.5s">♫</span>
+  <span class="note-float" style="bottom:18%;right:6%;animation-delay:.8s">♬</span>
+  <span class="landing-icon">🎵</span>
+  <div class="subtitle-tag">MY MUSIC LIBRARY</div>
+  <h1>경화의 <span>음악 공간</span></h1>
+  <p class="tagline">우리가 함께 만든 소중한 음악들을<br>이곳에 모아두었어요 🌸</p>
+  <button class="enter-btn" onclick="openHub()">🎶 입장하기</button>
+</div>
+
+<!-- 허브 -->
+<div id="hub">
+  <div class="hub-header">
+    <div class="hub-title">어디로 갈까요?</div>
+    <div class="hub-sub">작업실을 선택해주세요</div>
+  </div>
+  <div class="hub-grid">
+    <div class="hub-card" onclick="openPage('song-page')">
+      <span class="hub-emoji">🎵</span>
+      <div class="hub-name">노래 공유<br>작업실</div>
+      <div class="hub-desc">우리가 함께 만든<br>음악을 들어요</div>
+    </div>
+    <div class="hub-card" onclick="openPage('therapy-page')">
+      <span class="hub-emoji">🌿</span>
+      <div class="hub-name">소리, 생각<br>담아오기</div>
+      <div class="hub-desc">오늘의 기분과<br>소리를 담아요</div>
+    </div>
+  </div>
+</div>
+
+<!-- 노래 공유 작업실 -->
+<div class="page" id="song-page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goHub()">← 돌아가기</button>
+    <div class="page-title">🎵 노래 공유 작업실</div>
+    <div class="page-sub">우리가 함께 만든 음악들 🌸</div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">📷 우리의 순간들</div>
+    <div class="gallery-grid" id="gallery"></div>
+  </div>
+
+  <div id="lightbox">
+    <button class="lb-close" onclick="closeLb()">✕</button>
+    <button class="lb-nav lb-prev" onclick="navLb(-1)">‹</button>
+    <img id="lb-img" src="" alt="">
+    <button class="lb-nav lb-next" onclick="navLb(1)">›</button>
+  </div>
+
+  <div class="section">
+    <div class="section-label">🎼 트랙 리스트</div>
+    <div class="album-player" id="album-player">
+      <div class="album-cover-area" id="album-cover-area">
+        <img id="album-cover-img" src="" alt="">
+        <span id="album-cover-emoji">🎵</span>
+      </div>
+      <div class="album-player-name" id="album-player-name">—</div>
+      <div class="album-player-sub">재생 중</div>
+      <div class="album-progress" id="album-progress" onclick="seekFromBar(event)">
+        <div class="album-progress-fill" id="album-progress-fill"></div>
+      </div>
+      <div class="album-time-row">
+        <span id="album-cur">0:00</span>
+        <span id="album-dur">0:00</span>
+      </div>
+      <div class="album-controls">
+        <button class="album-ctrl" onclick="prevTrack()">⏮</button>
+        <button class="album-ctrl main" id="album-play-btn" onclick="toggleCurrentTrack()">⏸</button>
+        <button class="album-ctrl" onclick="nextTrack()">⏭</button>
+        <a class="album-ctrl" id="album-dl-btn" download style="font-size:18px;text-decoration:none;color:var(--text-mid)">💾</a>
+      </div>
+    </div>
+    <div id="track-list"></div>
+  </div>
+
+  <div class="section">
+    <div class="card">
+      <div class="card-title">REACT · 함께 느껴요</div>
+      <div class="emoji-row" id="reaction-row"></div>
+      <div class="heart-area">
+        <button class="heart-btn" id="heart-btn" onclick="addHeart()">❤️</button>
+        <span class="heart-count" id="heart-count">❤️ 0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="card">
+      <div class="card-title">💬 메시지 남기기</div>
+      <div class="comment-input-wrap">
+        <div class="comment-avatar">🌷</div>
+        <div class="input-col">
+          <input class="name-input" id="comment-name" type="text" placeholder="이름 (예: 엄마, 선생님)" maxlength="20">
+          <textarea class="comment-textarea" id="comment-text" rows="2" placeholder="따뜻한 말을 남겨주세요..."></textarea>
+          <button class="comment-submit" onclick="addComment()">남기기 ↑</button>
+        </div>
+      </div>
+      <div id="comment-list"><div class="list-empty">첫 번째 메시지를 남겨주세요 🌸</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 치료 자원 만들기 -->
+<div class="page" id="therapy-page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goHub()">← 돌아가기</button>
+    <div class="page-title">🌿 소리, 생각 담아오기</div>
+    <div class="page-sub">오늘의 기분과 소리를 담아요 🌿</div>
+  </div>
+
+  <div class="section">
+    <div class="card">
+      <div class="today-title">나는 오늘</div>
+      <div class="today-date" id="today-date"></div>
+      <div class="sub-label">이모지로</div>
+      <div class="mood-row">
+        <div class="mood-btn" onclick="selectMood(this,'😊')"><div class="mood-emoji">😊</div><div class="mood-label">좋아요</div></div>
+        <div class="mood-btn" onclick="selectMood(this,'😢')"><div class="mood-emoji">😢</div><div class="mood-label">슬퍼요</div></div>
+        <div class="mood-btn" onclick="selectMood(this,'😴')"><div class="mood-emoji">😴</div><div class="mood-label">피곤해요</div></div>
+        <div class="mood-btn" onclick="selectMood(this,'🥰')"><div class="mood-emoji">🥰</div><div class="mood-label">설레요</div></div>
+        <div class="mood-btn" onclick="selectMood(this,'😤')"><div class="mood-emoji">😤</div><div class="mood-label">답답해요</div></div>
+        <div class="mood-btn" onclick="selectMood(this,'🤩')"><div class="mood-emoji">🤩</div><div class="mood-label">신나요</div></div>
+        <div class="mood-btn" onclick="selectMood(this,'😌')"><div class="mood-emoji">😌</div><div class="mood-label">평온해요</div></div>
+        <div class="mood-btn" onclick="selectMood(this,'🤒')"><div class="mood-emoji">🤒</div><div class="mood-label">아파요</div></div>
+      </div>
+      <div class="sub-label">단어로</div>
+      <input class="word-input" id="word-input" placeholder="오늘을 한 단어로 표현하면..." maxlength="30" oninput="updateSummary()">
+      <div class="today-summary" id="today-summary"></div>
+      <div class="sub-label">그림으로</div>
+      <div class="canvas-wrap">
+        <div class="canvas-tools">
+          <div class="color-dot active" style="background:#C97B7B" onclick="setColor('#C97B7B',this)"></div>
+          <div class="color-dot" style="background:#FFD93D" onclick="setColor('#FFD93D',this)"></div>
+          <div class="color-dot" style="background:#6BCB77" onclick="setColor('#6BCB77',this)"></div>
+          <div class="color-dot" style="background:#4D96FF" onclick="setColor('#4D96FF',this)"></div>
+          <div class="color-dot" style="background:#C77DFF" onclick="setColor('#C77DFF',this)"></div>
+          <div class="color-dot" style="background:#3D2B1F" onclick="setColor('#3D2B1F',this)"></div>
+          <button class="tool-btn active" id="pen-btn" onclick="setTool('pen')">펜</button>
+          <button class="tool-btn" id="eraser-btn" onclick="setTool('eraser')">지우개</button>
+          <input type="range" min="2" max="20" value="4" oninput="brushSize=+this.value" style="flex:1;min-width:40px;max-width:70px">
+          <button class="tool-btn" onclick="clearCanvas()">지우기</button>
+        </div>
+        <canvas id="draw-canvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="card">
+      <div class="card-title">🎤 오늘의 소리</div>
+      <div class="rec-hint">무엇이든 좋아요 — 목소리, 병원 안 소리, 창문 밖 소리, 웃음소리...</div>
+      <button class="rec-btn" id="rec-btn" onclick="toggleRec()">
+        <span id="rec-icon">⏺</span><span id="rec-text">녹음 시작</span>
+      </button>
+      <div class="recordings-list" id="rec-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 비디오 모달 -->
+<div id="video-modal">
+  <div class="video-title" id="video-modal-title"></div>
+  <video id="video-player" controls playsinline></video>
+  <div style="display:flex;gap:10px;align-items:center">
+    <button class="video-close" onclick="closeVideo()">✕ 닫기</button>
+    <a id="video-dl-btn" download style="background:rgba(255,255,255,.18);color:#fff;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-family:'Noto Sans KR',sans-serif;text-decoration:none;min-height:36px;display:flex;align-items:center;gap:6px">💾 다운로드</a>
+  </div>
+</div>
+
+<script>
+const TRACKS = [
+  { emoji:'🐚', name:'나는 소라게', desc:'', type:'video', file:'video/soragae-video.mp4', cover:'' },
+  { emoji:'🎵', name:'나는 어쩌라고', desc:'', type:'audio', file:'audio/whatever.mp3', cover:'' },
+];
+const PHOTOS = [];
+const REACTIONS = [
+  {e:'😢',label:'뭉클해요',count:0},
+  {e:'🥰',label:'사랑스러워요',count:0},
+  {e:'💪',label:'힘이 나요',count:0},
+  {e:'🌟',label:'아름다워요',count:0},
+];
+const PASSCODE = '1234';
+
+/* ══ 게이트 ══ */
+function checkPw(){
+  const v=document.getElementById('gate-input').value;
+  const err=document.getElementById('gate-error');
+  if(v===PASSCODE){
+    document.getElementById('gate').style.display='none';
+    try{sessionStorage.setItem('idml_auth','1');}catch(e){}
+  }else{
+    err.classList.add('show');
+    document.getElementById('gate-input').value='';
+    document.getElementById('gate-input').focus();
+    setTimeout(()=>err.classList.remove('show'),2500);
+  }
+}
+try{if(sessionStorage.getItem('idml_auth')==='1')document.getElementById('gate').style.display='none';}catch(e){}
+
+/* ══ 페이지 전환 ══ */
+function openHub(){
+  document.getElementById('landing').style.display='none';
+  document.getElementById('hub').style.display='block';
+  window.scrollTo(0,0);
+}
+
+function openPage(id){
+  document.getElementById('hub').style.display='none';
+  document.getElementById(id).style.display='block';
+  if(id==='song-page'){initSong();}
+  if(id==='therapy-page'){initTherapy();}
+  window.scrollTo(0,0);
+}
+
+function goHub(){
+  audio.pause();playingIdx=-1;
+  document.getElementById('album-player').classList.remove('visible');
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  document.getElementById('hub').style.display='block';
+  window.scrollTo(0,0);
+}
+
+/* ══ 노래 작업실 초기화 ══ */
+function initSong(){
+  renderGallery();renderTracks();renderReactions();
+}
+
+/* ══ 치료 자원 초기화 ══ */
+function initTherapy(){
+  const d=new Date();
+  document.getElementById('today-date').textContent=d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일';
+  initCanvas();
+}
+
+/* ══ 갤러리 ══ */
+let lbIdx=0;
+function renderGallery(){
+  const el=document.getElementById('gallery');
+  if(!PHOTOS.length){el.innerHTML='';return;}
+  el.innerHTML=PHOTOS.map((p,i)=>`<div class="gallery-item" onclick="openLb(${i})"><img src="${p.src}" alt="${p.alt}" loading="lazy"></div>`).join('');
+}
+function openLb(i){lbIdx=i;document.getElementById('lb-img').src=PHOTOS[i].src;document.getElementById('lightbox').classList.add('open');}
+function closeLb(){document.getElementById('lightbox').classList.remove('open');}
+function navLb(d){lbIdx=(lbIdx+d+PHOTOS.length)%PHOTOS.length;document.getElementById('lb-img').src=PHOTOS[lbIdx].src;}
+document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this)closeLb();});
+
+/* ══ 오디오 ══ */
+const audio=new Audio();
+let playingIdx=-1;
+function fmt(s){if(isNaN(s)||!isFinite(s))return'0:00';return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');}
+audio.addEventListener('timeupdate',()=>{
+  if(!audio.duration)return;
+  const p=(audio.currentTime/audio.duration)*100;
+  document.getElementById('album-progress-fill').style.width=p+'%';
+  document.getElementById('album-cur').textContent=fmt(audio.currentTime);
+});
+audio.addEventListener('loadedmetadata',()=>{document.getElementById('album-dur').textContent=fmt(audio.duration);});
+audio.addEventListener('ended',()=>{playingIdx=-1;renderTracks();document.getElementById('album-player').classList.remove('visible');});
+function seekFromBar(e){
+  if(!audio.duration)return;
+  const bar=document.getElementById('album-progress');
+  const r=bar.getBoundingClientRect();
+  audio.currentTime=((e.clientX-r.left)/r.width)*audio.duration;
+}
+
+/* ══ 비디오 ══ */
+function openVideo(idx){
+  const t=TRACKS[idx];
+  document.getElementById('video-modal-title').textContent=t.name;
+  const vp=document.getElementById('video-player');
+  vp.src=t.file;vp.load();vp.play().catch(()=>{});
+  const dl=document.getElementById('video-dl-btn');
+  dl.href=t.file;dl.download=t.name;
+  document.getElementById('video-modal').classList.add('open');
+}
+function closeVideo(){
+  const vp=document.getElementById('video-player');
+  vp.pause();vp.src='';
+  document.getElementById('video-modal').classList.remove('open');
+}
+document.getElementById('video-modal').addEventListener('click',function(e){if(e.target===this)closeVideo();});
+
+/* ══ 트랙 렌더 & 재생 ══ */
+const THUMBBG=['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE8D6'];
+function renderTracks(){
+  document.getElementById('track-list').innerHTML=TRACKS.map((t,i)=>`
+    <div class="track-item${playingIdx===i&&t.type==='audio'?' playing':''}" onclick="playTrack(${i})">
+      <span class="track-num">${i+1}</span>
+      <div class="track-thumb" style="background:${THUMBBG[i%THUMBBG.length]}">
+        ${t.cover?`<img src="${t.cover}" alt="">`:`${t.emoji}`}
+        <span class="track-type-badge">${t.type==='video'?'▶ 영상':'♪ 음악'}</span>
+      </div>
+      <div class="track-info">
+        <div class="track-name">${t.name}</div>
+        <div class="track-desc">${t.desc}</div>
+      </div>
+      <div class="play-icon${playingIdx===i&&t.type==='audio'?' pause':''}">
+        ${playingIdx===i&&t.type==='audio'
+          ?'<svg viewBox="0 0 12 12"><rect x="1" y="1" width="3.5" height="10" rx="1"/><rect x="7.5" y="1" width="3.5" height="10" rx="1"/></svg>'
+          :'<svg viewBox="0 0 12 12"><polygon points="2,1 11,6 2,11"/></svg>'}
+      </div>
+    </div>`).join('');
+}
+
+function playTrack(i){
+  const t=TRACKS[i];
+  if(t.type==='video'){
+    audio.pause();playingIdx=-1;
+    document.getElementById('album-player').classList.remove('visible');
+    renderTracks();openVideo(i);return;
+  }
+  if(playingIdx===i){
+    if(audio.paused){audio.play().catch(()=>{});document.getElementById('album-play-btn').textContent='⏸';}
+    else{audio.pause();document.getElementById('album-play-btn').textContent='▶';}
+    renderTracks();return;
+  }
+  audio.pause();audio.src=t.file;audio.play().catch(()=>{});playingIdx=i;
+  const player=document.getElementById('album-player');
+  player.classList.add('visible');
+  document.getElementById('album-player-name').textContent=t.name;
+  document.getElementById('album-play-btn').textContent='⏸';
+  const dl=document.getElementById('album-dl-btn');
+  dl.href=t.file;dl.download=t.name;
+  const img=document.getElementById('album-cover-img');
+  const emoji=document.getElementById('album-cover-emoji');
+  if(t.cover){img.src=t.cover;img.classList.add('visible');emoji.style.display='none';}
+  else{img.classList.remove('visible');emoji.style.display='block';emoji.textContent=t.emoji;}
+  renderTracks();
+}
+
+function toggleCurrentTrack(){
+  if(playingIdx<0)return;
+  if(audio.paused){audio.play().catch(()=>{});document.getElementById('album-play-btn').textContent='⏸';}
+  else{audio.pause();document.getElementById('album-play-btn').textContent='▶';}
+  renderTracks();
+}
+function prevTrack(){
+  const at=TRACKS.map((t,i)=>t.type==='audio'?i:-1).filter(i=>i>=0);
+  if(!at.length)return;
+  const cur=at.indexOf(playingIdx);
+  playTrack(at[(cur-1+at.length)%at.length]);
+}
+function nextTrack(){
+  const at=TRACKS.map((t,i)=>t.type==='audio'?i:-1).filter(i=>i>=0);
+  if(!at.length)return;
+  const cur=at.indexOf(playingIdx);
+  playTrack(at[(cur+1)%at.length]);
+}
+
+/* ══ 리액션 ══ */
+const activeReactions=new Set();
+let heartCount=0;
+function renderReactions(){
+  document.getElementById('reaction-row').innerHTML=REACTIONS.map((r,i)=>`
+    <button class="emoji-btn${activeReactions.has(i)?' active':''}" onclick="toggleReaction(${i})">
+      <span class="emo">${r.e}</span><span>${r.label}</span><span class="emoji-count">${r.count}</span>
+    </button>`).join('');
+}
+function toggleReaction(i){
+  if(activeReactions.has(i)){activeReactions.delete(i);REACTIONS[i].count--;}
+  else{activeReactions.add(i);REACTIONS[i].count++;}
+  renderReactions();
+}
+function addHeart(){
+  heartCount++;
+  const btn=document.getElementById('heart-btn');
+  btn.classList.add('boom');setTimeout(()=>btn.classList.remove('boom'),380);
+  document.getElementById('heart-count').textContent='❤️ '+heartCount;
+}
+
+/* ══ 댓글 ══ */
+const comments=[];
+const AVATARS=['🌷','🌸','🌹','🌺','🌻','🌼','💐'];
+const AVCOLORS=['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE8D4'];
+function addComment(){
+  const t=document.getElementById('comment-text');
+  const n=document.getElementById('comment-name');
+  const text=t.value.trim();if(!text){t.focus();return;}
+  comments.unshift({avatar:AVATARS[Math.floor(Math.random()*AVATARS.length)],avcolor:AVCOLORS[comments.length%AVCOLORS.length],name:n.value.trim()||'익명의 방문자',text,time:'방금 전'});
+  t.value='';n.value='';renderComments();
+}
+function renderComments(){
+  const el=document.getElementById('comment-list');
+  if(!comments.length){el.innerHTML='<div class="list-empty">첫 번째 메시지를 남겨주세요 🌸</div>';return;}
+  el.innerHTML=comments.map(c=>`
+    <div class="comment-item">
+      <div class="c-avatar" style="background:${c.avcolor}">${c.avatar}</div>
+      <div><div class="c-name">${c.name}</div><div class="c-text">${c.text}</div><div class="c-time">${c.time}</div></div>
+    </div>`).join('');
+}
+
+/* ══ 나는 오늘 ══ */
+let selectedMood='';
+function selectMood(btn,emoji){
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');selectedMood=emoji;updateSummary();
+}
+function updateSummary(){
+  const word=document.getElementById('word-input').value.trim();
+  const s=document.getElementById('today-summary');
+  if(!selectedMood&&!word){s.style.display='none';return;}
+  s.style.display='block';
+  let t='나는 오늘';
+  if(selectedMood)t+=' '+selectedMood;
+  if(word)t+=(selectedMood?' · ':' ')+'「'+word+'」';
+  s.textContent=t;
+}
+
+/* ══ 캔버스 ══ */
+let drawing=false,tool='pen',color='#C97B7B',brushSize=4,canvasInited=false;
+function initCanvas(){
+  if(canvasInited)return;canvasInited=true;
+  const canvas=document.getElementById('draw-canvas');
+  const ctx=canvas.getContext('2d');
+  function resize(){const w=canvas.parentElement.clientWidth;canvas.width=w;canvas.height=Math.round(w*.5);ctx.fillStyle='#FFFAF7';ctx.fillRect(0,0,canvas.width,canvas.height);}
+  resize();window.addEventListener('resize',resize);
+  function pos(e){const r=canvas.getBoundingClientRect();const src=e.touches?e.touches[0]:e;return{x:(src.clientX-r.left)*(canvas.width/r.width),y:(src.clientY-r.top)*(canvas.height/r.height)};}
+  function draw(p){ctx.lineTo(p.x,p.y);ctx.strokeStyle=tool==='eraser'?'#FFFAF7':color;ctx.lineWidth=tool==='eraser'?brushSize*3:brushSize;ctx.lineCap='round';ctx.stroke();}
+  canvas.addEventListener('mousedown',e=>{drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+  canvas.addEventListener('mousemove',e=>{if(!drawing)return;draw(pos(e));});
+  canvas.addEventListener('mouseup',()=>drawing=false);
+  canvas.addEventListener('mouseleave',()=>drawing=false);
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);},{passive:false});
+  canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;draw(pos(e));},{passive:false});
+  canvas.addEventListener('touchend',()=>drawing=false);
+}
+function setColor(c,el){color=c;document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('active'));el.classList.add('active');if(tool==='eraser')setTool('pen');}
+function setTool(t){tool=t;document.getElementById('pen-btn').classList.toggle('active',t==='pen');document.getElementById('eraser-btn').classList.toggle('active',t==='eraser');}
+function clearCanvas(){const c=document.getElementById('draw-canvas');const ctx=c.getContext('2d');ctx.fillStyle='#FFFAF7';ctx.fillRect(0,0,c.width,c.height);}
+
+/* ══ 녹음 ══ */
+let mediaRec=null,recChunks=[],isRec=false,recCount=0;
+function toggleRec(){
+  if(!isRec){
+    navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+      mediaRec=new MediaRecorder(stream);recChunks=[];
+      mediaRec.ondataavailable=e=>recChunks.push(e.data);
+      mediaRec.onstop=()=>{
+        const blob=new Blob(recChunks,{type:'audio/webm'});
+        const url=URL.createObjectURL(blob);recCount++;
+        const item=document.createElement('div');item.className='rec-item';
+        item.innerHTML=`<span class="rec-item-name">🎤 소리 ${recCount}</span><audio src="${url}" style="display:none" id="aud${recCount}"></audio><button class="rec-play" onclick="document.getElementById('aud${recCount}').play()">▶</button><a href="${url}" download="소리${recCount}.webm" class="rec-dl">💾</a>`;
+        document.getElementById('rec-list').appendChild(item);
+        stream.getTracks().forEach(t=>t.stop());
+      };
+      mediaRec.start();isRec=true;
+      document.getElementById('rec-btn').classList.add('recording');
+      document.getElementById('rec-icon').textContent='⏹';
+      document.getElementById('rec-text').textContent='녹음 중... (클릭하면 멈춰요)';
+    }).catch(()=>alert('마이크 권한이 필요해요!'));
+  }else{
+    mediaRec.stop();isRec=false;
+    document.getElementById('rec-btn').classList.remove('recording');
+    document.getElementById('rec-icon').textContent='⏺';
+    document.getElementById('rec-text').textContent='녹음 시작';
+  }
+}
+</script>
+</body>
+</html>
