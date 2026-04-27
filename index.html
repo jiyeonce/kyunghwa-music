@@ -761,7 +761,7 @@ async function deleteComment(id){
   const mood=selectedMood;
   const word=document.getElementById('word-input').value.trim();
   const canvas=document.getElementById('draw-canvas');
-  const drawing=canvas.toDataURL('image/png');
+  const drawing=canvas.toDataURL('image/jpeg', 0.3);
   if(!mood&&!word){alert('기분이나 단어를 입력해줘요 🌸');return;}
   await sb.from('today_records').insert([{mood,word,drawing}]);
   alert('저장됐어요 🌸');
