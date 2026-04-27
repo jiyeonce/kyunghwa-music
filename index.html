@@ -628,19 +628,42 @@ function toggleRec(){
     navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
       mediaRec=new MediaRecorder(stream);recChunks=[];
       mediaRec.ondataavailable=e=>recChunks.push(e.data);
-      mediaRec.onstop=()=>{
-        const blob=new Blob(recChunks,{type:'audio/webm'});
-        const url=URL.createObjectURL(blob);
-        recCount++;
-        const recId='rec-audio-'+recCount;
-        const item=document.createElement('div');
-        item.className='rec-item';
-        item.innerHTML=`<span class="rec-item-name">🎤 소리 ${recCount}</span><button class="rec-play" onclick="playRec('${recId}')">▶</button><a href="${url}" download="소리${recCount}.webm" class="rec-dl">💾</a>`;
-        item.dataset.url=url;
-        item.dataset.id=recId;
-        document.getElementById('rec-list').appendChild(item);
-        stream.getTracks().forEach(t=>t.stop());
-      };
+      mediaRec.onstop=async ()=>{
+  const blob=new Blob(recChunks,{type:'audio/webm'});
+  recCount++;
+
+  const fileName='recording-'+Date.now()+'.webm';
+
+  const { error: uploadError } = await sb.storage
+    .from('recordings')
+    .upload(fileName, blob, {
+      contentType: 'audio/webm'
+    });
+
+  if(uploadError){
+    alert('녹음 업로드 실패: ' + uploadError.message);
+    stream.getTracks().forEach(t=>t.stop());
+    return;
+  }
+
+  const { data: publicData } = sb.storage
+    .from('recordings')
+    .getPublicUrl(fileName);
+
+  const fileUrl = publicData.publicUrl;
+
+  const { error: dbError } = await sb.from('recordings').insert([
+    { name:'소리 '+recCount, file_url:fileUrl }
+  ]);
+
+  if(dbError){
+    alert('녹음 저장 실패: ' + dbError.message);
+    return;
+  }
+
+  loadRecordings();
+  stream.getTracks().forEach(t=>t.stop());
+};
       mediaRec.start();isRec=true;
       document.getElementById('rec-btn').classList.add('recording');
       document.getElementById('rec-icon').textContent='⏹';
@@ -656,12 +679,64 @@ function toggleRec(){
 
 const recAudios={};
 function playRec(id){
+  async function loadRecordings(){
+  const { data, error } = await sb
+    .from('recordings')
+    .select('*')
+    .order('created_at',{ascending:false});
+
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  const list=document.getElementById('rec-list');
+
+  if(!data || !data.length){
+    list.innerHTML='';
+    return;
+  }
+
+  list.innerHTML=data.map((r,i)=>`
+    <div class="rec-item">
+      <span class="rec-item-name">🎤 ${r.name || '소리 '+(i+1)}</span>
+      <button class="rec-play" onclick="new Audio('${r.file_url}').play()">▶</button>
+      <a href="${r.file_url}" download class="rec-dl">💾</a>
+    </div>
+  `).join('');
+}
   if(recAudios[id]){recAudios[id].play();return;}
   const item=document.querySelector(`[data-id="${id}"]`);
   if(!item)return;
   const a=new Audio(item.dataset.url);
   recAudios[id]=a;
   a.play();
+}
+  async function loadRecordings(){
+  const { data, error } = await sb
+    .from('recordings')
+    .select('*')
+    .order('created_at',{ascending:false});
+
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  const list=document.getElementById('rec-list');
+
+  if(!data || !data.length){
+    list.innerHTML='';
+    return;
+  }
+
+  list.innerHTML=data.map((r,i)=>`
+    <div class="rec-item">
+      <span class="rec-item-name">🎤 ${r.name || '소리 '+(i+1)}</span>
+      <button class="rec-play" onclick="new Audio('${r.file_url}').play()">▶</button>
+      <a href="${r.file_url}" download class="rec-dl">💾</a>
+    </div>
+  `).join('');
 }
 </script>
 </body>
