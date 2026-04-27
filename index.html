@@ -240,6 +240,9 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
   <div class="page-header">
     <button class="back-btn" onclick="goHub()">← 돌아가기</button>
     <div class="page-title">🎵 노래 공유 작업실</div>
+    <div style="font-size:12px;color:#A08070;margin-top:4px;">
+  방문자 수: <span id="visit-count">0</span>
+</div>
     <div class="page-sub">우리가 함께 만든 음악들 🌸</div>
   </div>
 
@@ -439,6 +442,9 @@ function initSong(){
   renderReactions();
   loadComments();
   subscribeComments();
+
+  countVisit();
+  loadVisitCount();  
 }
 
 /* ══ 치료 자원 초기화 ══ */
@@ -620,6 +626,17 @@ async function loadComments(){
   comments.length=0;
   if(data)data.forEach(c=>comments.push(c));
   renderComments();
+}
+  async function countVisit(){  
+  await sb.from('visits').insert([{}]);  
+}  
+
+async function loadVisitCount(){  
+  const { count } = await sb
+    .from('visits')
+    .select('*', { count: 'exact', head: true });
+
+  document.getElementById('visit-count').textContent = count;
 }
   let commentsSubscribed = false;
 
