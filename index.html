@@ -300,6 +300,7 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
         <div class="input-col">
           <input class="name-input" id="comment-name" type="text" placeholder="이름 (예: 엄마, 선생님)" maxlength="20">
           <textarea class="comment-textarea" id="comment-text" rows="2" placeholder="따뜻한 말을 남겨주세요..."></textarea>
+          <input id="comment-password" type="password">
           <button class="comment-submit" onclick="addComment()">남기기 ↑</button>
         </div>
       </div>
@@ -596,9 +597,10 @@ async function addComment(){
   const avatar=AVATARS[Math.floor(Math.random()*AVATARS.length)];
   const avcolor=AVCOLORS[comments.length%AVCOLORS.length];
   const name=n.value.trim()||'익명의 방문자';
+  const pw = document.getElementById('comment-password').value;
 
   const { error } = await sb.from('comments').insert([
-    { name, text, avatar, avcolor }
+    { name, text, avatar, avcolor, password: pw }
   ]);
 
   if(error){
