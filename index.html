@@ -387,12 +387,19 @@ function initSong(){
 }
 function initTherapy(){
   const d=new Date();
-  document.getElementById('today-date').textContent=d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일';
+  document.getElementById('today-date').textContent=...
   initCanvas();
   loadTodayRecords();
   loadRecordings();
 }
+async function deleteRecording(fileUrl){
+  const fileName = fileUrl.split('/').pop();
 
+  await sb.storage.from('recordings').remove([fileName]);
+  await sb.from('recordings').delete().eq('file_url', fileUrl);
+
+  loadRecordings();
+}
 let lbIdx=0;
 function renderGallery(){
   const el=document.getElementById('gallery');
@@ -715,6 +722,7 @@ async function loadRecordings(){
     alert('녹음 목록 불러오기 실패: ' + error.message);
     return;
   }
+  
 
   const list=document.getElementById('rec-list');
 
@@ -726,8 +734,13 @@ async function loadRecordings(){
   list.innerHTML=data.map((r,i)=>`
   <div class="rec-item" style="flex-direction:column;align-items:stretch;">
     <span class="rec-item-name">🎤 ${r.name || '소리 '+(i+1)}</span>
+
     <audio controls src="${r.file_url}" style="width:100%;margin-top:6px;"></audio>
-    <a href="${r.file_url}" download class="rec-dl" style="align-self:flex-end;">💾</a>
+
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <a href="${r.file_url}" download class="rec-dl">💾</a>
+      <button onclick="deleteRecording('${r.file_url}')">🗑</button>
+    </div>
   </div>
 `).join('');
 }
