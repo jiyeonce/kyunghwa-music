@@ -395,10 +395,29 @@ function initTherapy(){
   loadRecordings();
 }
 async function deleteRecording(fileUrl){
-  const fileName = fileUrl.split('/').pop();
+  const ok = confirm('이 녹음을 삭제할까요?');
+  if(!ok) return;
 
-  await sb.storage.from('recordings').remove([fileName]);
-  await sb.from('recordings').delete().eq('file_url', fileUrl);
+  const fileName = fileUrl.split('/recordings/').pop();
+
+  const { error: storageError } = await sb.storage
+    .from('recordings')
+    .remove([fileName]);
+
+  if(storageError){
+    alert('파일 삭제 실패: ' + storageError.message);
+    return;
+  }
+
+  const { error: dbError } = await sb
+    .from('recordings')
+    .delete()
+    .eq('file_url', fileUrl);
+
+  if(dbError){
+    alert('목록 삭제 실패: ' + dbError.message);
+    return;
+  }
 
   loadRecordings();
 }
