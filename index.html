@@ -573,6 +573,18 @@ function nextTrack(){
 const activeReactions=new Set();
 let heartCount=0;
 function renderReactions(){
+  async function toggleReaction(i){  
+  const { error } = await sb  
+    .from('reactions')  
+    .insert([{ reaction_index: i }]);  
+  
+  if(error){  
+    alert('반응 저장 실패: ' + error.message);  
+    return;  
+  }  
+  
+  loadReactions();  
+}
   document.getElementById('reaction-row').innerHTML=REACTIONS.map((r,i)=>`
     <button class="emoji-btn${activeReactions.has(i)?' active':''}" onclick="toggleReaction(${i})">
       <span class="emo">${r.e}</span><span>${r.label}</span><span class="emoji-count">${r.count}</span>
@@ -610,10 +622,7 @@ async function toggleReaction(i){
 
   loadReactions();
 }
-  if(activeReactions.has(i)){activeReactions.delete(i);REACTIONS[i].count--;}
-  else{activeReactions.add(i);REACTIONS[i].count++;}
-  renderReactions();
-}
+  
 function addHeart(){
   heartCount++;
   const btn=document.getElementById('heart-btn');
