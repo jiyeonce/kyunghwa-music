@@ -591,6 +591,7 @@ const AVCOLORS=['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE8D4'];
 async function addComment(){
   const t=document.getElementById('comment-text');
   const n=document.getElementById('comment-name');
+  const pw = document.getElementById('comment-password').value;
   const text=t.value.trim();
   if(!text){t.focus();return;}
 
@@ -611,6 +612,8 @@ async function addComment(){
 
   t.value='';
   n.value='';
+  document.getElementById('comment-password').value='';
+  
   loadComments();
 }
 async function loadComments(){
