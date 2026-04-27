@@ -663,7 +663,7 @@ function toggleRec(){
 
         const { error: dbError } = await sb.from('recordings').insert([
           {
-            name:'소리 '+recCount,
+            name:'소리 '+new Date().toLocaleString('ko-KR'),
             file_url:fileUrl
           }
         ]);
@@ -724,12 +724,12 @@ async function loadRecordings(){
   }
 
   list.innerHTML=data.map((r,i)=>`
-    <div class="rec-item">
-      <span class="rec-item-name">🎤 ${r.name || '소리 '+(i+1)}</span>
-      <button class="rec-play" onclick="playSavedRecording('${r.file_url}')">▶</button>
-      <a href="${r.file_url}" download class="rec-dl">💾</a>
-    </div>
-  `).join('');
+  <div class="rec-item" style="flex-direction:column;align-items:stretch;">
+    <span class="rec-item-name">🎤 ${r.name || '소리 '+(i+1)}</span>
+    <audio controls src="${r.file_url}" style="width:100%;margin-top:6px;"></audio>
+    <a href="${r.file_url}" download class="rec-dl" style="align-self:flex-end;">💾</a>
+  </div>
+`).join('');
 }
 
 function playSavedRecording(url){
