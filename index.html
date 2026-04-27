@@ -836,7 +836,7 @@ function toggleRec(){
         const url=URL.createObjectURL(blob);recCount++;
         const item=document.createElement('div');item.className='rec-item';
         const recId='aud'+recCount;
-        item.innerHTML=`<span class="rec-item-name">🎤 소리 ${recCount}</span><audio src="${url}" style="display:none" id="aud${recCount}"></audio><button class="rec-play" onclick="document.getElementById('aud${recCount}').play()">▶</button><a href="${url}" download="소리${recCount}.webm" class="rec-dl">💾</a>`;
+        item.innerHTML=`<span class="rec-item-name">🎤 소리 ${recCount}</span><audio src="${url}" style="display:none" id="${recId}"></audio><button class="rec-play" onclick="document.getElementById('${recId}').play()">▶</button><a href="${url}" download="소리${recCount}.webm" class="rec-dl">💾</a>`;
         document.getElementById('rec-list').appendChild(item);
         stream.getTracks().forEach(t=>t.stop());
       };
