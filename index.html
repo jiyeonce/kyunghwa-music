@@ -374,7 +374,7 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
     <a id="video-dl-btn" download style="background:rgba(255,255,255,.18);color:#fff;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-family:'Noto Sans KR',sans-serif;text-decoration:none;min-height:36px;display:flex;align-items:center;gap:6px">💾 다운로드</a>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = 'https://aopuodrdxrulobwpfzfk.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_svZ43WIsSzEnmvTpir8SGg_9qRvD6Zd';
@@ -594,6 +594,7 @@ async function addComment(){
   t.value='';n.value='';
   loadComments();
 }
+async function loadComments(){
   const {data}=await sb.from('comments').select('*').order('created_at',{ascending:false});
   comments.length=0;
   if(data)data.forEach(c=>comments.push(c));
