@@ -298,10 +298,10 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
       <div class="comment-input-wrap">
         <div class="comment-avatar">🌷</div>
         <div class="input-col">
-          <input class="name-input" id="comment-name" type="text" placeholder="이름 (예: 엄마, 선생님)" maxlength="20">
-          <textarea class="comment-textarea" id="comment-text" rows="2" placeholder="따뜻한 말을 남겨주세요..."></textarea>
-          <input id="comment-password" type="password">
-          <button class="comment-submit" onclick="addComment()">남기기 ↑</button>
+         <input class="name-input" id="comment-name" type="text" placeholder="이름 (예: 엄마, 선생님)" maxlength="20">
+<textarea class="comment-textarea" id="comment-text" rows="2" placeholder="따뜻한 말을 남겨주세요..."></textarea>
+<input class="name-input" id="comment-password" type="password" placeholder="삭제할 때 사용할 비밀번호">
+<button class="comment-submit" onclick="addComment()">남기기 ↑</button>
         </div>
       </div>
       <div id="comment-list"><div class="list-empty">첫 번째 메시지를 남겨주세요 🌸</div></div>
@@ -644,11 +644,34 @@ function renderComments(){
   if(!comments.length){el.innerHTML='<div class="list-empty">첫 번째 메시지를 남겨주세요 🌸</div>';return;}
   el.innerHTML=comments.map(c=>`
     <div class="comment-item">
-      <div class="c-avatar" style="background:${c.avcolor}">${c.avatar}</div>
-      <div><div class="c-name">${c.name}</div><div class="c-text">${c.text}</div><div class="c-time">${new Date(c.created_at).toLocaleString()}</div></div>
+      <div class="c-avatar" style="background:${c.avcolor}">${c.avatar}</div><div>
+  <div class="c-name">${c.name}</div>
+  <div class="c-text">${c.text}</div>
+  <div class="c-time">${new Date(c.created_at).toLocaleString()}</div>
+  <button onclick="deleteComment(${c.id})" style="font-size:11px;color:#C97B7B;border:none;background:none;cursor:pointer;">
+    삭제
+  </button>
+</div>
     </div>`).join('');
 }
+async function deleteComment(id){
+  const pw = prompt('삭제 비밀번호를 입력하세요');
+  if(!pw) return;
 
+  const { data } = await sb
+    .from('comments')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if(!data || data.password !== pw){
+    alert('비밀번호가 틀렸어요');
+    return;
+  }
+
+  await sb.from('comments').delete().eq('id', id);
+  loadComments();
+}
 /* ══ 나는 오늘 ══ */
 let selectedMood='';
 function selectMood(btn,emoji){
