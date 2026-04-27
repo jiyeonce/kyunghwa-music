@@ -8,15 +8,8 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;overflow-x:hidden;scroll-behavior:smooth}
-:root{
-  --cream:#FFF8F0;--peach:#FFE4CC;
-  --pink:#C97B7B;--pink-light:#E8A89A;--pink-pale:#FFD6E8;
-  --teal:#5B9B8E;
-  --text-dark:#3D2B1F;--text-mid:#6B4E3D;--text-light:#A08070;
-}
+:root{--cream:#FFF8F0;--peach:#FFE4CC;--pink:#C97B7B;--pink-light:#E8A89A;--pink-pale:#FFD6E8;--teal:#5B9B8E;--text-dark:#3D2B1F;--text-mid:#6B4E3D;--text-light:#A08070;}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh}
-
-/* ── 게이트 ── */
 #gate{position:fixed;inset:0;z-index:500;background:linear-gradient(160deg,#FFF8F0 0%,#FFE8D8 50%,#FFD6E8 100%);display:flex;align-items:center;justify-content:center;padding:1.5rem}
 .gate-box{background:#fff;border-radius:24px;padding:2.2rem 2rem;border:1px solid rgba(200,160,140,.2);box-shadow:0 8px 40px rgba(201,123,123,.12);width:min(340px,90vw);text-align:center}
 .gate-emoji{font-size:40px;margin-bottom:1rem;display:block}
@@ -28,8 +21,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--t
 .gate-btn:active{transform:scale(.98)}
 .gate-error{font-size:12px;color:var(--pink);margin-top:.5rem;display:none}
 .gate-error.show{display:block}
-
-/* ── 랜딩 ── */
 #landing{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 1rem 2rem;text-align:center;background:linear-gradient(160deg,#FFF8F0 0%,#FFE8D8 50%,#FFD6E8 100%);position:relative;overflow:hidden}
 #landing::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle at 20% 20%,rgba(255,200,180,.3) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(180,220,210,.3) 0%,transparent 50%)}
 .note-float{position:absolute;font-size:16px;opacity:0;animation:floatNote 4s ease-in-out infinite;pointer-events:none}
@@ -42,8 +33,6 @@ h1 span{color:var(--pink)}
 .enter-btn{background:linear-gradient(135deg,var(--pink),var(--pink-light));color:#fff;border:none;padding:.9rem 2.4rem;border-radius:50px;font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 4px 18px rgba(201,123,123,.35);min-height:48px;animation:fadeUp .9s .3s ease both;opacity:0}
 .enter-btn:active{transform:scale(.97)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── 허브 ── */
 #hub{display:none;min-height:100vh;min-height:100dvh;background:linear-gradient(160deg,#FFF8F0 0%,#FFE8D8 60%,#FFD6E8 100%);padding:2.5rem 1rem 3rem}
 .hub-header{text-align:center;margin-bottom:2rem}
 .hub-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.3rem,5vw,1.8rem);color:var(--text-dark);margin-bottom:.4rem}
@@ -57,8 +46,6 @@ h1 span{color:var(--pink)}
 .hub-emoji{font-size:44px;margin-bottom:.9rem;display:block}
 .hub-name{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:600;color:var(--text-dark);line-height:1.5;margin-bottom:.4rem}
 .hub-desc{font-size:11px;color:var(--text-light);line-height:1.7}
-
-/* ── 공통 페이지 ── */
 .page{display:none;min-height:100vh;background:var(--cream);padding-bottom:120px}
 .page-header{background:linear-gradient(135deg,var(--peach) 0%,var(--pink-pale) 100%);padding:3rem 1.2rem 1.2rem;text-align:center;border-bottom:1px solid rgba(200,160,140,.2);position:relative}
 .back-btn{position:absolute;left:.9rem;top:.9rem;background:rgba(255,255,255,.65);border:1px solid rgba(200,160,140,.3);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--text-mid);cursor:pointer;font-family:'Noto Sans KR',sans-serif;min-height:36px}
@@ -68,8 +55,6 @@ h1 span{color:var(--pink)}
 .section-label{font-size:10px;letter-spacing:2px;color:var(--text-light);margin-bottom:.8rem;text-transform:uppercase}
 .card{background:#fff;border-radius:18px;padding:1.1rem 1rem;border:1.5px solid rgba(200,160,140,.15);margin-bottom:.75rem}
 .card-title{font-size:11px;color:var(--text-light);letter-spacing:1px;margin-bottom:.9rem}
-
-/* ── 트랙 ── */
 .track-item{display:flex;align-items:center;gap:10px;padding:11px 10px;background:#fff;border-radius:14px;margin-bottom:8px;border:1px solid rgba(200,160,140,.15);cursor:pointer;position:relative;overflow:hidden;min-height:60px}
 .track-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--pink),var(--pink-light));border-radius:3px 0 0 3px;opacity:0;transition:opacity .2s}
 .track-item.playing{background:linear-gradient(135deg,#FFF5F0,#FFF8FC)}
@@ -85,8 +70,6 @@ h1 span{color:var(--pink)}
 .play-icon{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--pink-light));display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .play-icon svg{width:11px;height:11px;fill:#fff;margin-left:2px}
 .play-icon.pause svg{margin-left:0}
-
-/* ── 앨범커버 플레이어 ── */
 .album-player{background:linear-gradient(135deg,#FFF5F0,#FFF0F8);border-radius:18px;padding:1.2rem;margin-bottom:8px;display:none}
 .album-player.visible{display:block}
 .album-cover-area{width:100%;max-width:260px;margin:0 auto 1rem;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--peach);display:flex;align-items:center;justify-content:center;font-size:48px;position:relative}
@@ -101,16 +84,12 @@ h1 span{color:var(--pink)}
 .album-ctrl{width:36px;height:36px;border:none;background:none;cursor:pointer;font-size:18px;color:var(--text-mid);display:flex;align-items:center;justify-content:center}
 .album-ctrl.main{width:48px;height:48px;background:linear-gradient(135deg,var(--pink),var(--pink-light));border-radius:50%;color:#fff;font-size:20px;box-shadow:0 3px 12px rgba(201,123,123,.3)}
 .album-ctrl.main:active{transform:scale(.95)}
-
-/* ── 비디오 모달 ── */
 #video-modal{display:none;position:fixed;inset:0;z-index:400;background:rgba(20,10,5,.92);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:1rem;flex-direction:column;gap:12px}
 #video-modal.open{display:flex}
 #video-modal video{max-width:min(92vw,640px);max-height:75vh;border-radius:14px;background:#000;outline:none}
 .video-title{font-size:14px;font-weight:500;color:#fff;font-family:'Noto Serif KR',serif}
 .video-close{background:rgba(255,255,255,.18);border:none;color:#fff;font-size:14px;padding:8px 20px;border-radius:20px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;min-height:36px}
 .video-close:active{background:rgba(255,255,255,.3)}
-
-/* ── 갤러리 ── */
 .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .gallery-item{aspect-ratio:1;border-radius:12px;overflow:hidden;cursor:pointer;background:var(--peach)}
 .gallery-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
@@ -121,8 +100,6 @@ h1 span{color:var(--pink)}
 .lb-close{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,.18);border:none;color:#fff;font-size:22px;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.18);border:none;color:#fff;font-size:20px;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .lb-prev{left:1rem}.lb-next{right:1rem}
-
-/* ── 리액션 ── */
 .emoji-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:1rem}
 .emoji-btn{display:flex;align-items:center;gap:5px;background:var(--cream);border:1.5px solid rgba(200,160,140,.2);border-radius:20px;padding:7px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:12px;min-height:36px;transition:all .2s}
 .emoji-btn.active{background:#FFF0E8;border-color:var(--pink)}
@@ -135,8 +112,6 @@ h1 span{color:var(--pink)}
 .heart-btn.boom{animation:heartBoom .35s ease}
 @keyframes heartBoom{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
 .heart-count{font-size:15px;color:var(--pink);font-weight:500}
-
-/* ── 댓글 ── */
 .comment-input-wrap{display:flex;gap:8px;margin-bottom:1rem;align-items:flex-start}
 .comment-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#FFB8A0,#FFD6D6);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;margin-top:2px}
 .input-col{flex:1;display:flex;flex-direction:column;gap:6px}
@@ -153,8 +128,6 @@ h1 span{color:var(--pink)}
 .c-text{font-size:13px;color:var(--text-dark);line-height:1.65}
 .c-time{font-size:10px;color:var(--text-light);margin-top:3px}
 .list-empty{font-size:13px;color:var(--text-light);text-align:center;padding:1rem 0}
-
-/* ── 나는 오늘 ── */
 .today-title{font-family:'Noto Serif KR',serif;font-size:20px;color:var(--text-dark);margin-bottom:4px}
 .today-date{font-size:12px;color:var(--text-light);margin-bottom:1rem}
 .sub-label{font-size:11px;color:var(--text-light);letter-spacing:1px;margin-bottom:8px;margin-top:14px;text-transform:uppercase}
@@ -174,8 +147,6 @@ h1 span{color:var(--pink)}
 .tool-btn{padding:4px 10px;border-radius:8px;border:1.5px solid rgba(200,160,140,.2);background:#fff;font-size:11px;font-weight:500;cursor:pointer;color:var(--pink);font-family:'Noto Sans KR',sans-serif}
 .tool-btn.active{background:#FFF0E8;border-color:var(--pink)}
 canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto}
-
-/* ── 녹음 ── */
 .rec-hint{font-size:12px;color:var(--text-light);margin-bottom:10px;line-height:1.8}
 .rec-btn{width:100%;padding:13px;border-radius:14px;border:2px dashed rgba(200,160,140,.3);background:var(--cream);cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:500;color:var(--pink);display:flex;align-items:center;justify-content:center;gap:8px}
 .rec-btn:active{background:#FFF0E8}
@@ -189,8 +160,6 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
 </style>
 </head>
 <body>
-
-<!-- 게이트 -->
 <div id="gate">
   <div class="gate-box">
     <span class="gate-emoji">🎵</span>
@@ -201,8 +170,6 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
     <div class="gate-error" id="gate-error">입장 코드가 맞지 않아요 🌸</div>
   </div>
 </div>
-
-<!-- 랜딩 -->
 <div id="landing">
   <span class="note-float" style="top:12%;left:6%;animation-delay:0s">♩</span>
   <span class="note-float" style="top:22%;right:8%;animation-delay:1.2s">♪</span>
@@ -214,8 +181,6 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
   <p class="tagline">우리가 함께 만든 소중한 음악들을<br>이곳에 모아두었어요 🌸</p>
   <button class="enter-btn" onclick="openHub()">🎶 입장하기</button>
 </div>
-
-<!-- 허브 -->
 <div id="hub">
   <div class="hub-header">
     <div class="hub-title">어디로 갈까요?</div>
@@ -234,30 +199,23 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
     </div>
   </div>
 </div>
-
-<!-- 노래 공유 작업실 -->
 <div class="page" id="song-page">
   <div class="page-header">
     <button class="back-btn" onclick="goHub()">← 돌아가기</button>
     <div class="page-title">🎵 노래 공유 작업실</div>
-    <div style="font-size:12px;color:#A08070;margin-top:4px;">
-  방문자 수: <span id="visit-count">0</span>
-</div>
+    <div style="font-size:12px;color:#A08070;margin-top:4px;">방문자 수: <span id="visit-count">0</span></div>
     <div class="page-sub">우리가 함께 만든 음악들 🌸</div>
   </div>
-
   <div class="section">
     <div class="section-label">📷 우리의 순간들</div>
     <div class="gallery-grid" id="gallery"></div>
   </div>
-
   <div id="lightbox">
     <button class="lb-close" onclick="closeLb()">✕</button>
     <button class="lb-nav lb-prev" onclick="navLb(-1)">‹</button>
     <img id="lb-img" src="" alt="">
     <button class="lb-nav lb-next" onclick="navLb(1)">›</button>
   </div>
-
   <div class="section">
     <div class="section-label">🎼 트랙 리스트</div>
     <div class="album-player" id="album-player">
@@ -283,7 +241,6 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
     </div>
     <div id="track-list"></div>
   </div>
-
   <div class="section">
     <div class="card">
       <div class="card-title">REACT · 함께 느껴요</div>
@@ -294,32 +251,28 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
       </div>
     </div>
   </div>
-
   <div class="section">
     <div class="card">
       <div class="card-title">💬 메시지 남기기</div>
       <div class="comment-input-wrap">
         <div class="comment-avatar">🌷</div>
         <div class="input-col">
-         <input class="name-input" id="comment-name" type="text" placeholder="이름 (예: 엄마, 선생님)" maxlength="20">
-<textarea class="comment-textarea" id="comment-text" rows="2" placeholder="따뜻한 말을 남겨주세요..."></textarea>
-<input class="name-input" id="comment-password" type="password" placeholder="삭제할 때 사용할 비밀번호">
-<button class="comment-submit" onclick="addComment()">남기기 ↑</button>
+          <input class="name-input" id="comment-name" type="text" placeholder="이름 (예: 엄마, 선생님)" maxlength="20">
+          <textarea class="comment-textarea" id="comment-text" rows="2" placeholder="따뜻한 말을 남겨주세요..."></textarea>
+          <input class="name-input" id="comment-password" type="password" placeholder="삭제할 때 사용할 비밀번호">
+          <button class="comment-submit" onclick="addComment()">남기기 ↑</button>
         </div>
       </div>
       <div id="comment-list"><div class="list-empty">첫 번째 메시지를 남겨주세요 🌸</div></div>
     </div>
   </div>
 </div>
-
-<!-- 치료 자원 만들기 -->
 <div class="page" id="therapy-page">
   <div class="page-header">
     <button class="back-btn" onclick="goHub()">← 돌아가기</button>
     <div class="page-title">🌿 소리, 생각 담아오기</div>
     <div class="page-sub">오늘의 기분과 소리를 담아요 🌿</div>
   </div>
-
   <div class="section">
     <div class="card">
       <div class="today-title">나는 오늘</div>
@@ -339,7 +292,7 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
       <input class="word-input" id="word-input" placeholder="오늘을 한 단어로 표현하면..." maxlength="30" oninput="updateSummary()">
       <div class="today-summary" id="today-summary"></div>
       <button onclick="saveTodayRecord()" style="width:100%;margin-top:12px;padding:12px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--pink),var(--pink-light));color:#fff;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:500;cursor:pointer;">오늘 기록 저장하기 🌸</button>
-<div id="today-records-list" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;"></div>
+      <div id="today-records-list" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;"></div>
       <div class="sub-label">그림으로</div>
       <div class="canvas-wrap">
         <div class="canvas-tools">
@@ -358,7 +311,6 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
       </div>
     </div>
   </div>
-
   <div class="section">
     <div class="card">
       <div class="card-title">🎤 오늘의 소리</div>
@@ -370,8 +322,6 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
     </div>
   </div>
 </div>
-
-<!-- 비디오 모달 -->
 <div id="video-modal">
   <div class="video-title" id="video-modal-title"></div>
   <video id="video-player" controls playsinline></video>
@@ -382,23 +332,22 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = 'https://aopuodrdxrulobwpfzfk.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvcHVvZHJkeHJ1bG9id3BmemZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyNjI3MzMsImV4cCI6MjA5MjgzODczM30.c5YufG71Zr3DZw8jzwfQvXZ6m4XiTQ160s-e26sdF7o';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  const TRACKS = [
-  { emoji:'🐚', name:'나는 소라게', desc:'', type:'video', file:'videos/soragae-video.mp4', cover:'' },
-  { emoji:'🎵', name:'나는 어쩌라고', desc:'', type:'audio', file:'audio/whatever.mp3', cover:'' },
+const SUPABASE_URL='https://aopuodrdxrulobwpfzfk.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvcHVvZHJkeHJ1bG9id3BmemZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyNjI3MzMsImV4cCI6MjA5MjgzODczM30.c5YufG71Zr3DZw8jzwfQvXZ6m4XiTQ160s-e26sdF7o';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const TRACKS=[
+  {emoji:'🐚',name:'나는 소라게',desc:'',type:'video',file:'videos/soragae-video.mp4',cover:''},
+  {emoji:'🎵',name:'나는 어쩌라고',desc:'',type:'audio',file:'audio/whatever.mp3',cover:''},
 ];
-const PHOTOS = [];
-const REACTIONS = [
+const PHOTOS=[];
+const REACTIONS=[
   {e:'😢',label:'뭉클해요',count:0},
   {e:'🥰',label:'사랑스러워요',count:0},
   {e:'💪',label:'힘이 나요',count:0},
   {e:'🌟',label:'아름다워요',count:0},
 ];
-const PASSCODE = '0116';
+const PASSCODE='0116';
 
-/* ══ 게이트 ══ */
 function checkPw(){
   const v=document.getElementById('gate-input').value;
   const err=document.getElementById('gate-error');
@@ -414,21 +363,18 @@ function checkPw(){
 }
 try{if(sessionStorage.getItem('idml_auth')==='1')document.getElementById('gate').style.display='none';}catch(e){}
 
-/* ══ 페이지 전환 ══ */
 function openHub(){
   document.getElementById('landing').style.display='none';
   document.getElementById('hub').style.display='block';
   window.scrollTo(0,0);
 }
-
 function openPage(id){
   document.getElementById('hub').style.display='none';
   document.getElementById(id).style.display='block';
-  if(id==='song-page'){initSong();}
-  if(id==='therapy-page'){initTherapy();}
+  if(id==='song-page')initSong();
+  if(id==='therapy-page')initTherapy();
   window.scrollTo(0,0);
 }
-
 function goHub(){
   audio.pause();playingIdx=-1;
   document.getElementById('album-player').classList.remove('visible');
@@ -436,29 +382,15 @@ function goHub(){
   document.getElementById('hub').style.display='block';
   window.scrollTo(0,0);
 }
-
-/* ══ 노래 작업실 초기화 ══ */
 function initSong(){
-  renderGallery();
-  renderTracks();
-  renderReactions();
-  loadComments();
-  subscribeComments();
-  loadReactions();
-  countVisit();
-  loadVisitCount();  
-  loadHeartCount();
+  renderGallery();renderTracks();renderReactions();loadComments();subscribeComments();loadReactions();countVisit();loadVisitCount();loadHeartCount();
 }
-
-/* ══ 치료 자원 초기화 ══ */
 function initTherapy(){
   const d=new Date();
   document.getElementById('today-date').textContent=d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일';
-  initCanvas();
-  loadTodayRecords();
+  initCanvas();loadTodayRecords();
 }
 
-/* ══ 갤러리 ══ */
 let lbIdx=0;
 function renderGallery(){
   const el=document.getElementById('gallery');
@@ -470,7 +402,6 @@ function closeLb(){document.getElementById('lightbox').classList.remove('open');
 function navLb(d){lbIdx=(lbIdx+d+PHOTOS.length)%PHOTOS.length;document.getElementById('lb-img').src=PHOTOS[lbIdx].src;}
 document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this)closeLb();});
 
-/* ══ 오디오 ══ */
 const audio=new Audio();
 let playingIdx=-1;
 function fmt(s){if(isNaN(s)||!isFinite(s))return'0:00';return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');}
@@ -489,7 +420,6 @@ function seekFromBar(e){
   audio.currentTime=((e.clientX-r.left)/r.width)*audio.duration;
 }
 
-/* ══ 비디오 ══ */
 function openVideo(idx){
   const t=TRACKS[idx];
   document.getElementById('video-modal-title').textContent=t.name;
@@ -506,7 +436,6 @@ function closeVideo(){
 }
 document.getElementById('video-modal').addEventListener('click',function(e){if(e.target===this)closeVideo();});
 
-/* ══ 트랙 렌더 & 재생 ══ */
 const THUMBBG=['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE8D6'];
 function renderTracks(){
   document.getElementById('track-list').innerHTML=TRACKS.map((t,i)=>`
@@ -516,10 +445,7 @@ function renderTracks(){
         ${t.cover?`<img src="${t.cover}" alt="">`:`${t.emoji}`}
         <span class="track-type-badge">${t.type==='video'?'▶ 영상':'♪ 음악'}</span>
       </div>
-      <div class="track-info">
-        <div class="track-name">${t.name}</div>
-        <div class="track-desc">${t.desc}</div>
-      </div>
+      <div class="track-info"><div class="track-name">${t.name}</div><div class="track-desc">${t.desc}</div></div>
       <div class="play-icon${playingIdx===i&&t.type==='audio'?' pause':''}">
         ${playingIdx===i&&t.type==='audio'
           ?'<svg viewBox="0 0 12 12"><rect x="1" y="1" width="3.5" height="10" rx="1"/><rect x="7.5" y="1" width="3.5" height="10" rx="1"/></svg>'
@@ -527,256 +453,128 @@ function renderTracks(){
       </div>
     </div>`).join('');
 }
-
 function playTrack(i){
   const t=TRACKS[i];
-  if(t.type==='video'){
-    audio.pause();playingIdx=-1;
-    document.getElementById('album-player').classList.remove('visible');
-    renderTracks();openVideo(i);return;
-  }
+  if(t.type==='video'){audio.pause();playingIdx=-1;document.getElementById('album-player').classList.remove('visible');renderTracks();openVideo(i);return;}
   if(playingIdx===i){
     if(audio.paused){audio.play().catch(()=>{});document.getElementById('album-play-btn').textContent='⏸';}
     else{audio.pause();document.getElementById('album-play-btn').textContent='▶';}
     renderTracks();return;
   }
   audio.pause();audio.src=t.file;audio.play().catch(()=>{});playingIdx=i;
-  const player=document.getElementById('album-player');
-  player.classList.add('visible');
+  document.getElementById('album-player').classList.add('visible');
   document.getElementById('album-player-name').textContent=t.name;
   document.getElementById('album-play-btn').textContent='⏸';
-  const dl=document.getElementById('album-dl-btn');
-  dl.href=t.file;dl.download=t.name;
-  const img=document.getElementById('album-cover-img');
-  const emoji=document.getElementById('album-cover-emoji');
+  const dl=document.getElementById('album-dl-btn');dl.href=t.file;dl.download=t.name;
+  const img=document.getElementById('album-cover-img');const emoji=document.getElementById('album-cover-emoji');
   if(t.cover){img.src=t.cover;img.classList.add('visible');emoji.style.display='none';}
   else{img.classList.remove('visible');emoji.style.display='block';emoji.textContent=t.emoji;}
   renderTracks();
 }
-
 function toggleCurrentTrack(){
   if(playingIdx<0)return;
   if(audio.paused){audio.play().catch(()=>{});document.getElementById('album-play-btn').textContent='⏸';}
   else{audio.pause();document.getElementById('album-play-btn').textContent='▶';}
   renderTracks();
 }
-function prevTrack(){
-  const at=TRACKS.map((t,i)=>t.type==='audio'?i:-1).filter(i=>i>=0);
-  if(!at.length)return;
-  const cur=at.indexOf(playingIdx);
-  playTrack(at[(cur-1+at.length)%at.length]);
-}
-function nextTrack(){
-  const at=TRACKS.map((t,i)=>t.type==='audio'?i:-1).filter(i=>i>=0);
-  if(!at.length)return;
-  const cur=at.indexOf(playingIdx);
-  playTrack(at[(cur+1)%at.length]);
-}
+function prevTrack(){const at=TRACKS.map((t,i)=>t.type==='audio'?i:-1).filter(i=>i>=0);if(!at.length)return;const cur=at.indexOf(playingIdx);playTrack(at[(cur-1+at.length)%at.length]);}
+function nextTrack(){const at=TRACKS.map((t,i)=>t.type==='audio'?i:-1).filter(i=>i>=0);if(!at.length)return;const cur=at.indexOf(playingIdx);playTrack(at[(cur+1)%at.length]);}
 
-/* ══ 리액션 ══ */
 const activeReactions=new Set();
-let heartCount=0;
 function renderReactions(){
-  async function toggleReaction(i){  
-  const { error } = await sb  
-    .from('reactions')  
-    .insert([{ reaction_index: i }]);  
-  
-  if(error){  
-    alert('반응 저장 실패: ' + error.message);  
-    return;  
-  }  
-  
-  loadReactions();  
-}
   document.getElementById('reaction-row').innerHTML=REACTIONS.map((r,i)=>`
     <button class="emoji-btn${activeReactions.has(i)?' active':''}" onclick="toggleReaction(${i})">
       <span class="emo">${r.e}</span><span>${r.label}</span><span class="emoji-count">${r.count}</span>
     </button>`).join('');
 }
-  async function loadReactions(){
-  const { data, error } = await sb
-    .from('reactions')
-    .select('reaction_index');
-
-  if(error){
-    console.log(error);
-    return;
-  }
-
-  REACTIONS.forEach(r => r.count = 0);
-
-  data.forEach(r => {
-    if(REACTIONS[r.reaction_index]){
-      REACTIONS[r.reaction_index].count++;
-    }
-  });
-
+async function loadReactions(){
+  const{data,error}=await sb.from('reactions').select('reaction_index');
+  if(error){console.log(error);return;}
+  REACTIONS.forEach(r=>r.count=0);
+  data.forEach(r=>{if(REACTIONS[r.reaction_index])REACTIONS[r.reaction_index].count++;});
   renderReactions();
 }
 async function toggleReaction(i){
-  const { error } = await sb
-    .from('reactions')
-    .insert([{ reaction_index: i }]);
-
-  if(error){
-    alert('반응 저장 실패: ' + error.message);
-    return;
-  }
-
+  const{error}=await sb.from('reactions').insert([{reaction_index:i}]);
+  if(error){alert('반응 저장 실패: '+error.message);return;}
   loadReactions();
 }
-  
 async function addHeart(){
-  const { error } = await sb.from('hearts').insert([{}]);
-
-  if(error){
-    alert('하트 저장 실패: ' + error.message);
-    return;
-  }
-
+  const{error}=await sb.from('hearts').insert([{}]);
+  if(error){alert('하트 저장 실패: '+error.message);return;}
   loadHeartCount();
-
   const btn=document.getElementById('heart-btn');
-  btn.classList.add('boom');
-  setTimeout(()=>btn.classList.remove('boom'),380);
+  btn.classList.add('boom');setTimeout(()=>btn.classList.remove('boom'),380);
 }
-  async function loadHeartCount(){
-  const { count, error } = await sb
-    .from('hearts')
-    .select('*', { count: 'exact', head: true });
-
-  if(error){
-    console.log(error);
-    return;
-  }
-
-  document.getElementById('heart-count').textContent='❤️ ' + count;
+async function loadHeartCount(){
+  const{count,error}=await sb.from('hearts').select('*',{count:'exact',head:true});
+  if(error){console.log(error);return;}
+  document.getElementById('heart-count').textContent='❤️ '+count;
 }
-  
 
-/* ══ 댓글 ══ */
 const comments=[];
 const AVATARS=['🌷','🌸','🌹','🌺','🌻','🌼','💐'];
 const AVCOLORS=['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE8D4'];
 async function addComment(){
   const t=document.getElementById('comment-text');
   const n=document.getElementById('comment-name');
-  const pw = document.getElementById('comment-password').value;
-  const text=t.value.trim();
-  if(!text){t.focus();return;}
-
+  const pw=document.getElementById('comment-password').value;
+  const text=t.value.trim();if(!text){t.focus();return;}
   const avatar=AVATARS[Math.floor(Math.random()*AVATARS.length)];
   const avcolor=AVCOLORS[comments.length%AVCOLORS.length];
   const name=n.value.trim()||'익명의 방문자';
-
-  const { error } = await sb.from('comments').insert([
-    { name, text, avatar, avcolor, password: pw }
-  ]);
-
-  if(error){
-    console.log(error);
-    alert('댓글 저장 실패: ' + error.message);
-    return;
-  }
-
-  t.value='';
-  n.value='';
-  document.getElementById('comment-password').value='';
-  
+  const{error}=await sb.from('comments').insert([{name,text,avatar,avcolor,password:pw}]);
+  if(error){console.log(error);alert('댓글 저장 실패: '+error.message);return;}
+  t.value='';n.value='';document.getElementById('comment-password').value='';
   loadComments();
 }
 async function loadComments(){
-  const {data}=await sb.from('comments').select('*').order('created_at',{ascending:false});
-  comments.length=0;
-  if(data)data.forEach(c=>comments.push(c));
-  renderComments();
+  const{data}=await sb.from('comments').select('*').order('created_at',{ascending:false});
+  comments.length=0;if(data)data.forEach(c=>comments.push(c));renderComments();
 }
-  async function countVisit(){  
-  await sb.from('visits').insert([{}]);  
-}  
-
-async function loadVisitCount(){  
-  const { count } = await sb
-    .from('visits')
-    .select('*', { count: 'exact', head: true });
-
-  document.getElementById('visit-count').textContent = count;
+async function countVisit(){await sb.from('visits').insert([{}]);}
+async function loadVisitCount(){
+  const{count}=await sb.from('visits').select('*',{count:'exact',head:true});
+  document.getElementById('visit-count').textContent=count;
 }
-  let commentsSubscribed = false;
-
+let commentsSubscribed=false;
 function subscribeComments(){
-  if(commentsSubscribed) return;
-  commentsSubscribed = true;
-
-  sb.channel('comments-realtime')
-    .on(
-      'postgres_changes',
-      {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'comments'
-      },
-      () => {
-        loadComments();
-      }
-    )
-    .subscribe();
+  if(commentsSubscribed)return;commentsSubscribed=true;
+  sb.channel('comments-realtime').on('postgres_changes',{event:'INSERT',schema:'public',table:'comments'},()=>{loadComments();}).subscribe();
 }
 function renderComments(){
   const el=document.getElementById('comment-list');
   if(!comments.length){el.innerHTML='<div class="list-empty">첫 번째 메시지를 남겨주세요 🌸</div>';return;}
   el.innerHTML=comments.map(c=>`
     <div class="comment-item">
-      <div class="c-avatar" style="background:${c.avcolor}">${c.avatar}</div><div>
-  <div class="c-name">${c.name}</div>
-  <div class="c-text">${c.text}</div>
-  <div class="c-time">${new Date(c.created_at).toLocaleString()}</div>
-  <button onclick="deleteComment(${c.id})" style="font-size:11px;color:#C97B7B;border:none;background:none;cursor:pointer;">
-    삭제
-  </button>
-</div>
+      <div class="c-avatar" style="background:${c.avcolor}">${c.avatar}</div>
+      <div><div class="c-name">${c.name}</div><div class="c-text">${c.text}</div>
+      <div class="c-time">${new Date(c.created_at).toLocaleString()}</div>
+      <button onclick="deleteComment(${c.id})" style="font-size:11px;color:#C97B7B;border:none;background:none;cursor:pointer;">삭제</button></div>
     </div>`).join('');
 }
 async function deleteComment(id){
-  const pw = prompt('삭제 비밀번호를 입력하세요');
-  if(!pw) return;
-
-  const { data } = await sb
-    .from('comments')
-    .select('*')
-    .eq('id', id)
-    .single();
-
-  if(!data || data.password !== pw){
-    alert('비밀번호가 틀렸어요');
-    return;
-  }
-
-  await sb.from('comments').delete().eq('id', id);
-  loadComments();
+  const pw=prompt('삭제 비밀번호를 입력하세요');if(!pw)return;
+  const{data}=await sb.from('comments').select('*').eq('id',id).single();
+  if(!data||data.password!==pw){alert('비밀번호가 틀렸어요');return;}
+  await sb.from('comments').delete().eq('id',id);loadComments();
 }
-/* ══ 나는 오늘 ══ */
-  async function saveTodayRecord(){
+
+async function saveTodayRecord(){
   const mood=selectedMood;
   const word=document.getElementById('word-input').value.trim();
   const canvas=document.getElementById('draw-canvas');
-  
-  // 작은 캔버스로 리사이즈
   const small=document.createElement('canvas');
   small.width=canvas.width;small.height=canvas.height;
-small.getContext('2d').drawImage(canvas,0,0,canvas.width,canvas.height);
-const drawing=small.toDataURL('image/png');
-  
+  small.getContext('2d').drawImage(canvas,0,0,canvas.width,canvas.height);
+  const drawing=small.toDataURL('image/png');
   if(!mood&&!word){alert('기분이나 단어를 입력해줘요 🌸');return;}
-  const {error}=await sb.from('today_records').insert([{mood,word,drawing}]);
+  const{error}=await sb.from('today_records').insert([{mood,word,drawing}]);
   if(error){alert('저장 실패: '+error.message);return;}
-  alert('저장됐어요 🌸');
-  loadTodayRecords();
+  alert('저장됐어요 🌸');loadTodayRecords();
 }
-
 async function loadTodayRecords(){
-  const {data}=await sb.from('today_records').select('*').order('created_at',{ascending:false}).limit(10);
+  const{data}=await sb.from('today_records').select('*').order('created_at',{ascending:false}).limit(10);
   const el=document.getElementById('today-records-list');
   if(!data||!data.length){el.innerHTML='';return;}
   el.innerHTML=data.map(r=>`
@@ -786,6 +584,7 @@ async function loadTodayRecords(){
       ${r.drawing?`<img src="${r.drawing}" style="width:100%;border-radius:8px;margin-top:6px">`:''}
     </div>`).join('');
 }
+
 let selectedMood='';
 function selectMood(btn,emoji){
   document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
@@ -802,7 +601,6 @@ function updateSummary(){
   s.textContent=t;
 }
 
-/* ══ 캔버스 ══ */
 let drawing=false,tool='pen',color='#C97B7B',brushSize=4,canvasInited=false;
 function initCanvas(){
   if(canvasInited)return;canvasInited=true;
@@ -824,7 +622,6 @@ function setColor(c,el){color=c;document.querySelectorAll('.color-dot').forEach(
 function setTool(t){tool=t;document.getElementById('pen-btn').classList.toggle('active',t==='pen');document.getElementById('eraser-btn').classList.toggle('active',t==='eraser');}
 function clearCanvas(){const c=document.getElementById('draw-canvas');const ctx=c.getContext('2d');ctx.fillStyle='#FFFAF7';ctx.fillRect(0,0,c.width,c.height);}
 
-/* ══ 녹음 ══ */
 let mediaRec=null,recChunks=[],isRec=false,recCount=0;
 function toggleRec(){
   if(!isRec){
@@ -833,10 +630,14 @@ function toggleRec(){
       mediaRec.ondataavailable=e=>recChunks.push(e.data);
       mediaRec.onstop=()=>{
         const blob=new Blob(recChunks,{type:'audio/webm'});
-        const url=URL.createObjectURL(blob);recCount++;
-        const item=document.createElement('div');item.className='rec-item';
-        const recId='aud'+recCount;
-        item.innerHTML=`<span class="rec-item-name">🎤 소리 ${recCount}</span><audio src="${url}" style="display:none" id="${recId}"></audio><button class="rec-play" onclick="document.getElementById('${recId}').play()">▶</button><a href="${url}" download="소리${recCount}.webm" class="rec-dl">💾</a>`;
+        const url=URL.createObjectURL(blob);
+        recCount++;
+        const recId='rec-audio-'+recCount;
+        const item=document.createElement('div');
+        item.className='rec-item';
+        item.innerHTML=`<span class="rec-item-name">🎤 소리 ${recCount}</span><button class="rec-play" onclick="playRec('${recId}')">▶</button><a href="${url}" download="소리${recCount}.webm" class="rec-dl">💾</a>`;
+        item.dataset.url=url;
+        item.dataset.id=recId;
         document.getElementById('rec-list').appendChild(item);
         stream.getTracks().forEach(t=>t.stop());
       };
@@ -851,6 +652,16 @@ function toggleRec(){
     document.getElementById('rec-icon').textContent='⏺';
     document.getElementById('rec-text').textContent='녹음 시작';
   }
+}
+
+const recAudios={};
+function playRec(id){
+  if(recAudios[id]){recAudios[id].play();return;}
+  const item=document.querySelector(`[data-id="${id}"]`);
+  if(!item)return;
+  const a=new Audio(item.dataset.url);
+  recAudios[id]=a;
+  a.play();
 }
 </script>
 </body>
