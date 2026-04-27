@@ -398,7 +398,14 @@ function deleteRecording(fileUrl){
   openDeleteModal('recording', fileUrl);
 }
 
-  const { error: dbError } = await sb
+async function deleteRecordingReal(fileUrl){
+  const fileName = fileUrl.split('/recordings/').pop();
+
+  await sb.storage.from('recordings').remove([fileName]);
+  await sb.from('recordings').delete().eq('file_url', fileUrl);
+
+  loadRecordings();
+}
     .from('recordings')
     .delete()
     .eq('file_url', fileUrl);
@@ -774,6 +781,9 @@ function playSavedRecording(url){
   function deleteTodayRecord(id){
   openDeleteModal('today', id);
 }
+
+async function deleteTodayRecordReal(id){
+  await sb.from('today_records').delete().eq('id', id);
   loadTodayRecords();
 }
   let deleteTarget=null;
@@ -789,15 +799,17 @@ function closeDeleteModal(){
   document.getElementById('delete-modal').style.display='none';
 }
 
-document.getElementById('confirm-delete-btn').onclick=async function(){
-  if(deleteType==='recording'){
-    await deleteRecordingReal(deleteTarget);
-  }
-  if(deleteType==='today'){
-    await deleteTodayRecordReal(deleteTarget);
-  }
-  closeDeleteModal();
-};
+window.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('confirm-delete-btn').onclick=async function(){
+    if(deleteType==='recording'){
+      await deleteRecordingReal(deleteTarget);
+    }
+    if(deleteType==='today'){
+      await deleteTodayRecordReal(deleteTarget);
+    }
+    closeDeleteModal();
+  };
+});
 </script>
 <div id="delete-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:16px;padding:20px;width:260px;text-align:center;">
