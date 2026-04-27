@@ -608,11 +608,23 @@ async function loadTodayRecords(){
   const el=document.getElementById('today-records-list');
   if(!data||!data.length){el.innerHTML='';return;}
   el.innerHTML=data.map(r=>`
-    <div style="background:linear-gradient(135deg,#FFF5F0,#FFF0F8);border-radius:12px;padding:10px 12px;border:1px solid rgba(200,160,140,.15)">
-      <div style="font-size:11px;color:var(--text-light);margin-bottom:6px">${new Date(r.created_at).toLocaleDateString('ko-KR')}</div>
-      <div style="font-size:18px;margin-bottom:4px">${r.mood||''} ${r.word?'「'+r.word+'」':''}</div>
-      ${r.drawing?`<img src="${r.drawing}" style="width:100%;border-radius:8px;margin-top:6px">`:''}
-    </div>`).join('');
+  <div style="position:relative;background:linear-gradient(135deg,#FFF5F0,#FFF0F8);border-radius:12px;padding:10px 12px;border:1px solid rgba(200,160,140,.15)">
+    <button onclick="deleteTodayRecord(${r.id})"
+      style="position:absolute;top:8px;right:8px;background:#fff;border:1px solid rgba(200,160,140,.3);border-radius:50%;width:30px;height:30px;cursor:pointer;">
+      🗑
+    </button>
+
+    <div style="font-size:11px;color:var(--text-light);margin-bottom:6px">
+      ${new Date(r.created_at).toLocaleDateString('ko-KR')}
+    </div>
+
+    <div style="font-size:18px;margin-bottom:4px">
+      ${r.mood||''} ${r.word?'「'+r.word+'」':''}
+    </div>
+
+    ${r.drawing?`<img src="${r.drawing}" style="width:100%;border-radius:8px;margin-top:6px">`:''}
+  </div>
+`).join('');
 }
 
 let selectedMood='';
@@ -769,6 +781,38 @@ async function loadRecordings(){
 function playSavedRecording(url){
   const audio=new Audio(url);
   audio.play();
+}
+  async function deleteTodayRecord(id){
+  const ok = confirm('이 기록을 삭제할까요?');
+  if(!ok) return;
+
+  const { error } = await sb
+    .from('today_records')
+    .delete()
+    .eq('id', id);
+
+  if(error){
+    alert('삭제 실패: ' + error.message);
+    return;
+  }
+
+  loadTodayRecords();
+    async function deleteTodayRecord(id){
+  const ok = confirm('이 기록을 삭제할까요?');
+  if(!ok) return;
+
+  const { error } = await sb
+    .from('today_records')
+    .delete()
+    .eq('id', id);
+
+  if(error){
+    alert('삭제 실패: ' + error.message);
+    return;
+  }
+
+  loadTodayRecords();
+}
 }
 </script>
 </body>
