@@ -433,7 +433,12 @@ function goHub(){
 
 /* ══ 노래 작업실 초기화 ══ */
 function initSong(){
-  renderGallery();renderTracks();renderReactions();loadComments();
+  renderGallery();
+  renderTracks();
+  renderReactions();
+  loadComments();
+  subscribeComments();
+}
 }
 
 /* ══ 치료 자원 초기화 ══ */
@@ -612,6 +617,26 @@ async function loadComments(){
   comments.length=0;
   if(data)data.forEach(c=>comments.push(c));
   renderComments();
+}
+  let commentsSubscribed = false;
+
+function subscribeComments(){
+  if(commentsSubscribed) return;
+  commentsSubscribed = true;
+
+  sb.channel('comments-realtime')
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'comments'
+      },
+      () => {
+        loadComments();
+      }
+    )
+    .subscribe();
 }
 function renderComments(){
   const el=document.getElementById('comment-list');
