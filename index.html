@@ -592,7 +592,8 @@ async function addComment(){
   const name=n.value.trim()||'익명의 방문자';
   await sb.from('comments').insert([{name,text,avatar,avcolor}]);
   t.value='';n.value='';
-async function loadComments(){
+  loadComments();
+}
   const {data}=await sb.from('comments').select('*').order('created_at',{ascending:false});
   comments.length=0;
   if(data)data.forEach(c=>comments.push(c));
