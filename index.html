@@ -445,6 +445,7 @@ function initSong(){
   loadReactions();
   countVisit();
   loadVisitCount();  
+  loadHeartCount();
 }
 
 /* ══ 치료 자원 초기화 ══ */
@@ -623,12 +624,33 @@ async function toggleReaction(i){
   loadReactions();
 }
   
-function addHeart(){
-  heartCount++;
+async function addHeart(){
+  const { error } = await sb.from('hearts').insert([{}]);
+
+  if(error){
+    alert('하트 저장 실패: ' + error.message);
+    return;
+  }
+
+  loadHeartCount();
+
   const btn=document.getElementById('heart-btn');
-  btn.classList.add('boom');setTimeout(()=>btn.classList.remove('boom'),380);
-  document.getElementById('heart-count').textContent='❤️ '+heartCount;
+  btn.classList.add('boom');
+  setTimeout(()=>btn.classList.remove('boom'),380);
 }
+  async function loadHeartCount(){
+  const { count, error } = await sb
+    .from('hearts')
+    .select('*', { count: 'exact', head: true });
+
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  document.getElementById('heart-count').textContent='❤️ ' + count;
+}
+  
 
 /* ══ 댓글 ══ */
 const comments=[];
