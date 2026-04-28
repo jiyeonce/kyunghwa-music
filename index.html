@@ -769,7 +769,17 @@ async function loadRecordings(){
     alert('녹음 목록 불러오기 실패: ' + error.message);
     return;
   }
-  
+
+  async function uploadPhoto(input){  
+  const file=input.files[0];if(!file)return;  
+  const fileName='photo-'+Date.now()+'.'+file.name.split('.').pop();  
+  const{error:uploadError}=await sb.storage.from('photos').upload(fileName,file,{contentType:file.type});  
+  if(uploadError){alert('업로드 실패: '+uploadError.message);return;}  
+  const{data}=sb.storage.from('photos').getPublicUrl(fileName);  
+  const{error:dbError}=await sb.from('photos').insert([{file_url:data.publicUrl}]);  
+  if(dbError){alert('저장 실패: '+dbError.message);return;}  
+  loadPhotos();  
+}
 
   const list=document.getElementById('rec-list');
 
@@ -829,17 +839,7 @@ function closeDeleteModal(){
     closeDeleteModal();
   };
 });
-  async function uploadPhoto(input){
-  const file=input.files[0];if(!file)return;
-  const fileName='photo-'+Date.now()+'.'+file.name.split('.').pop();
-  const{error:uploadError}=await sb.storage.from('photos').upload(fileName,file,{contentType:file.type});
-  if(uploadError){alert('업로드 실패: '+uploadError.message);return;}
-  const{data}=sb.storage.from('photos').getPublicUrl(fileName);
-  const{error:dbError}=await sb.from('photos').insert([{file_url:data.publicUrl}]);
-  if(dbError){alert('저장 실패: '+dbError.message);return;}
-  loadPhotos();
-}
-
+  
 async function uploadPhoto(input){
   ...
 }
@@ -911,9 +911,6 @@ async function deleteCurrentPhoto(){
     await sb.storage.from('photos').remove([fileName]);
   }
 
-  document.getElementById('lightbox').classList.remove('open');
-  await loadPhotos();
-}
   document.getElementById('lightbox').classList.remove('open');
   loadPhotos();
 }
