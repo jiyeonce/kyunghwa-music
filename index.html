@@ -864,9 +864,6 @@ function closeDeleteModal(){
 let photoListData = [];
 let currentPhotoIdx = 0;
 let lightboxMode = 'gallery';
-let photoListData = [];
-let currentPhotoIdx = 0;
-let lightboxMode = 'gallery';
 
 async function loadPhotos(){
   const {data, error} = await sb
@@ -895,10 +892,10 @@ async function loadPhotos(){
   `).join('');
 }
 
-function openPhoto(i){
-  lightboxMode = 'photo';
-  currentPhotoIdx = i;
-  document.getElementById('lb-img').src = photoListData[i].file_url;
+function openLb(i){
+  lightboxMode = 'gallery';
+  lbIdx = i;
+  document.getElementById('lb-img').src = PHOTOS[i].src;
   document.getElementById('lightbox').classList.add('open');
 }
 
