@@ -439,11 +439,20 @@ function seekFromBar(e){
 function openVideo(idx){
   const t=TRACKS[idx];
   document.getElementById('video-modal-title').textContent=t.name;
+
   const vp=document.getElementById('video-player');
-  vp.src=t.file;vp.load();vp.play().catch(()=>{});
+  vp.src=t.file;
+  vp.load();
+
   const dl=document.getElementById('video-dl-btn');
-  dl.href=t.file;dl.download=t.name;
+  dl.href=t.file;
+  dl.download=t.name;
+
   document.getElementById('video-modal').classList.add('open');
+
+  vp.play().catch(err=>{
+    console.log('영상 자동재생 차단:', err);
+  });
 }
 function closeVideo(){
   const vp=document.getElementById('video-player');
