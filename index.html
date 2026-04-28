@@ -319,7 +319,7 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
       <div class="card-title">📸 오늘의 사진</div>
       <label style="display:block;width:100%;padding:13px;border-radius:14px;border:2px dashed rgba(200,160,140,.3);background:var(--cream);cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:500;color:var(--pink);text-align:center;">
         📷 사진 찍기 / 올리기
-        <input type="file" accept="image/*" capture="environment" style="display:none" onchange="uploadPhoto(this)">
+        <input type="file" accept="image/*" style="display:none" onchange="uploadPhoto(this)">
       </label>
       <div id="photo-list" style="margin-top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
     </div>
@@ -657,7 +657,7 @@ function initCanvas(){
   if(canvasInited)return;canvasInited=true;
   const canvas=document.getElementById('draw-canvas');
   const ctx=canvas.getContext('2d');
-  function resize(){const w=canvas.parentElement.clientWidth;canvas.width=w;canvas.height=Math.round(w*.5);ctx.fillStyle='#FFFAF7';ctx.fillRect(0,0,canvas.width,canvas.height);}
+  function resize(){const w=canvas.parentElement.clientWidth;canvas.width=w;canvas.height=Math.round(w*.7);ctx.fillStyle='#FFFAF7';ctx.fillRect(0,0,canvas.width,canvas.height);}
   resize();window.addEventListener('resize',resize);
   function pos(e){const r=canvas.getBoundingClientRect();const src=e.touches?e.touches[0]:e;return{x:(src.clientX-r.left)*(canvas.width/r.width),y:(src.clientY-r.top)*(canvas.height/r.height)};}
   function draw(p){ctx.lineTo(p.x,p.y);ctx.strokeStyle=tool==='eraser'?'#FFFAF7':color;ctx.lineWidth=tool==='eraser'?brushSize*3:brushSize;ctx.lineCap='round';ctx.stroke();}
