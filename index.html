@@ -314,6 +314,16 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
   <div class="section">
     <div class="card">
       <div class="card-title">🎤 오늘의 소리</div>
+      <div class="section">
+    <div class="card">
+      <div class="card-title">📸 오늘의 사진</div>
+      <label style="display:block;width:100%;padding:13px;border-radius:14px;border:2px dashed rgba(200,160,140,.3);background:var(--cream);cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:500;color:var(--pink);text-align:center;">
+        📷 사진 찍기 / 올리기
+        <input type="file" accept="image/*" capture="environment" style="display:none" onchange="uploadPhoto(this)">
+      </label>
+      <div id="photo-list" style="margin-top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div>
+    </div>
+  </div>
       <div class="rec-hint">무엇이든 좋아요 — 목소리, 병원 안 소리, 창문 밖 소리, 웃음소리...</div>
       <button class="rec-btn" id="rec-btn" onclick="toggleRec()">
         <span id="rec-icon">⏺</span><span id="rec-text">녹음 시작</span>
@@ -397,6 +407,7 @@ function initTherapy(){
   initCanvas();
   loadTodayRecords();
   loadRecordings();
+  loadPhotos();
 }
 function deleteRecording(fileUrl){
   openDeleteModal('recording', fileUrl);
@@ -813,6 +824,26 @@ function closeDeleteModal(){
     closeDeleteModal();
   };
 });
+  async function uploadPhoto(input){
+  const file=input.files[0];if(!file)return;
+  const fileName='photo-'+Date.now()+'.'+file.name.split('.').pop();
+  const{error:uploadError}=await sb.storage.from('photos').upload(fileName,file,{contentType:file.type});
+  if(uploadError){alert('업로드 실패: '+uploadError.message);return;}
+  const{data}=sb.storage.from('photos').getPublicUrl(fileName);
+  const{error:dbError}=await sb.from('photos').insert([{file_url:data.publicUrl}]);
+  if(dbError){alert('저장 실패: '+dbError.message);return;}
+  loadPhotos();
+}
+
+async function loadPhotos(){
+  const{data}=await sb.from('photos').select('*').order('created_at',{ascending:false});
+  const el=document.getElementById('photo-list');
+  if(!data||!data.length){el.innerHTML='';return;}
+  el.innerHTML=data.map(p=>`
+    <div style="aspect-ratio:1;border-radius:10px;overflow:hidden;position:relative;">
+      <img src="${p.file_url}" style="width:100%;height:100%;object-fit:cover;">
+    </div>`).join('');
+}
 </script>
 <div id="delete-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:16px;padding:20px;width:260px;text-align:center;">
