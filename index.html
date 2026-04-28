@@ -210,18 +210,7 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
     <div class="section-label">📷 우리의 순간들</div>
     <div class="gallery-grid" id="gallery"></div>
   </div>
-  <div id="lightbox">
-    
-    <button class="lb-close" onclick="closeLb()">✕</button>
-    <button class="lb-nav lb-prev" onclick="navLb(-1)">‹</button>
-    <img id="lb-img" src="" alt="">
-    <button class="lb-nav lb-next" onclick="navLb(1)">›</button>
-    <button onclick="deleteCurrentPhoto()"
-    style="position:absolute;bottom:1.2rem;right:1.2rem;background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:20px;padding:8px 16px;font-size:13px;">
-    🗑 삭제
-  </button>
-
-</div>
+  
   <div class="section">
     <div class="section-label">🎼 트랙 리스트</div>
     <div class="album-player" id="album-player">
@@ -338,6 +327,18 @@ canvas{display:block;touch-action:none;background:#FFFAF7;width:100%;height:auto
       <div class="recordings-list" id="rec-list"></div>
     </div>
   </div>
+</div>
+  <div id="lightbox">
+    
+    <button class="lb-close" onclick="closeLb()">✕</button>
+    <button class="lb-nav lb-prev" onclick="navLb(-1)">‹</button>
+    <img id="lb-img" src="" alt="">
+    <button class="lb-nav lb-next" onclick="navLb(1)">›</button>
+    <button onclick="deleteCurrentPhoto()"
+    style="position:absolute;bottom:1.2rem;right:1.2rem;background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:20px;padding:8px 16px;font-size:13px;">
+    🗑 삭제
+  </button>
+
 </div>
 <div id="video-modal">
   <div class="video-title" id="video-modal-title"></div>
@@ -830,6 +831,39 @@ function closeDeleteModal(){
 });
 
 /* 🔥👇 여기부터 붙여넣기 */
+  async function uploadPhoto(input){
+  const file = input.files[0];
+  if(!file) return;
+
+  const fileName = 'photo-' + Date.now() + '.' + file.name.split('.').pop();
+
+  const { error: uploadError } = await sb.storage
+    .from('photos')
+    .upload(fileName, file, { contentType: file.type });
+
+  if(uploadError){
+    alert('업로드 실패: ' + uploadError.message);
+    return;
+  }
+
+  const { data } = sb.storage.from('photos').getPublicUrl(fileName);
+
+  const { error: dbError } = await sb
+    .from('photos')
+    .insert([{ file_url: data.publicUrl }]);
+
+  if(dbError){
+    alert('저장 실패: ' + dbError.message);
+    return;
+  }
+
+  input.value = '';
+  await loadPhotos();
+}
+
+let photoListData = [];
+let currentPhotoIdx = 0;
+let lightboxMode = 'gallery';
 let photoListData = [];
 let currentPhotoIdx = 0;
 let lightboxMode = 'gallery';
