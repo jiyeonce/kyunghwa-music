@@ -828,17 +828,6 @@ function closeDeleteModal(){
     closeDeleteModal();
   };
 });
-  
-async function uploadPhoto(input){
-  const file=input.files[0];if(!file)return;
-  const fileName='photo-'+Date.now()+'.'+file.name.split('.').pop();
-  const{error:uploadError}=await sb.storage.from('photos').upload(fileName,file,{contentType:file.type});
-  if(uploadError){alert('업로드 실패: '+uploadError.message);return;}
-  const{data}=sb.storage.from('photos').getPublicUrl(fileName);
-  const{error:dbError}=await sb.from('photos').insert([{file_url:data.publicUrl}]);
-  if(dbError){alert('저장 실패: '+dbError.message);return;}
-  loadPhotos();
-}
 
 /* 🔥👇 여기부터 붙여넣기 */
 let photoListData = [];
@@ -892,20 +881,25 @@ function navLb(d){
 }
 
 async function deleteCurrentPhoto(){
-  if(lightboxMode !== 'photo')return;
-  if(!photoListData.length)return;
+  if(lightboxMode !== 'photo') return;
+  if(!photoListData.length) return;
 
   const ok = confirm('이 사진을 삭제할까요?');
-  if(!ok)return;
+  if(!ok) return;
 
   const p = photoListData[currentPhotoIdx];
 
   await sb.from('photos').delete().eq('id', p.id);
 
   const fileName = p.file_url.split('/photos/').pop();
+
   if(fileName){
     await sb.storage.from('photos').remove([fileName]);
   }
+
+  document.getElementById('lightbox').classList.remove('open');
+  await loadPhotos();
+}
 
 </script>
 <div id="delete-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:999;align-items:center;justify-content:center;">
